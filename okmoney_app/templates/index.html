@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OKMoney</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" <!-- Este padrão mostrado acima serve para todas as
+        referencias de caminhos que serão utilizados, por exemplom se tiver alguma imagem que queira mostrar o codigo
+        seria: <img src="{% static 'images/nomedaimagem.extensão'%}" este codigo se refere a pasta /images criado
+        em /static dentro do aplicativo-->
+
+</head>
+
+<body>
+    <h1>index</h1>
+
+    {%for produto in produtos%}
+    <p>{{ produto }}
+        <p />
+        {% endfor %}
+</body>
+
+</html>
