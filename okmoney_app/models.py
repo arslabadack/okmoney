@@ -1,4 +1,6 @@
 from django.db import models
+# from django.db.models.deletion import DO_NOTHING
+# from django.contrib.auth.models import User
 
 
 class MoneyIn(models.Model):
@@ -11,13 +13,12 @@ class MoneyIn(models.Model):
 
 
 class MoneyOut(models.Model):
-    categoria = models.CharField('Categoria', max_length=100)
     motivo = models.CharField('Motivo', max_length=200)
     local = models.CharField('Local', max_length=200)
     valor = models.DecimalField('Valor', decimal_places=2, max_digits=8)
     data = models.DateField('Data')
-    metodo_pagamento = models.models.BooleanField(("Método de Pagamento"))
-    observacao = models.TextField(max_length=200, blank=True)
+    metodo_pagamento = models.CharField('Metodo de Pagamento', max_length=100)
+    observacao = models.TextField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.motivo
@@ -28,3 +29,7 @@ class reminders(models.Model):
 
     def __str__(self):
         return self.lembrete
+
+
+# registered_by = models.ForeignKey(User, on_delete=DO_NOTHING, related_name='registered_by')
+# collected_by = models.ForeignKey(User, on_delete=DO_NOTHING, related_name='collected_by', null=True, blank=True)
