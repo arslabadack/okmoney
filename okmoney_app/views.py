@@ -8,31 +8,31 @@ from django.template import loader
 
 
 def index(request):
-    form = ContatoForm(request.POST or None)
+ #   form = ContatoForm(request.POST or None)
 
-    if str(request.method) == 'POST':
-        if form.is_valid():
-            nome = form.cleaned_data['nome']
-            email = form.cleaned_data['email']
-            mensagem = form.cleaned_data['mensagem']
+    # if str(request.method) == 'POST':
+    #     if form.is_valid():
+    #         nome = form.cleaned_data['nome']
+    #         email = form.cleaned_data['email']
+    #         mensagem = form.cleaned_data['mensagem']
 
-            print('Mensagem enviada')
-            print(f'Nome: {nome}')
+    #         print('Mensagem enviada')
+    #         print(f'Nome: {nome}')
 
-            messages.success(request, 'Mensagem enviada com sucesso!')
-            form = ContatoForm()
-        else:
-            messages.error(request, 'Formulário inválido')
+    #         messages.success(request, 'Mensagem enviada com sucesso!')
+    #         form = ContatoForm()
+    #     else:
+    #         messages.error(request, 'Formulário inválido')
 
-    context = {
-        'form': form,
-    }
+    # context = {
+    #     'form': form,
+    # }
     #    produtos = Produto.objects.all()
     #
     #    context = {
     #        'produtos': produtos
     #    }
-    return render(request, 'index.html', context)  # , context)
+    return render(request, 'index.html')  # , context)
 
 
 # def produto(request, pk):
@@ -57,6 +57,10 @@ def error500(request):
 
 def money_in(request):
     return render(request, 'money_in.html')
+
+
+def money_out(request):
+    return render(request, 'money_out.html')
 
 # class Login(View):
 #     def get(self, *args, **kwargs):

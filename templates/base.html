@@ -9,10 +9,7 @@
 </head>
 
 <body>
-
-    <!--*******************
-        Preloader start
-    ********************-->
+    <!--Preloader start-->
     <div id="preloader">
         <div class="loader">
             <svg class="circular" viewBox="25 25 50 50">
@@ -20,28 +17,38 @@
             </svg>
         </div>
     </div>
-    <!--*******************
-        Preloader end
-    ********************-->
+    <!--Preloader end-->
 
 
-    <!--**********************************
-        Main wrapper start
-    ***********************************-->
+    <!--Main wrapper start-->
     <div id="main-wrapper">
 
-        <!--**********************************
-            Content body start
-        ***********************************-->
+        <!--Nav header start-->
+        {% include 'partial/_nav_header.html' %}
+        <!--Nav header end-->
+
+        <!--Header start-->
+        {% include 'partial/_header.html' %}
+        <!--Header end-->
+
+        <!--Sidebar start-->
+        {% include 'partial/_sidebar.html' %}
+        <!--Sidebar end-->
+
+        <!--Content body start-->
         <div class="content-body">
 
-            {% block content %}{% endblock %}
+            {% block content %}
+            
+            {% endblock %}
  
             <div>
                 {% include 'partial/_footer.html' %}
             </div>
+        <!--Content body end-->
         </div>
-
+    <!--Main wrapper end-->
+    </div>
 
     {% block scripts %}
         
