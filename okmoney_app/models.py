@@ -4,6 +4,7 @@ from django.db import models
 
 
 class MoneyIn(models.Model):
+    data = models.DateField(default='2020-01-01')
     categoria = models.CharField(max_length=100)
     valor = models.DecimalField('Preço', decimal_places=2, max_digits=8)
     observacao = models.TextField(max_length=200, blank=True)

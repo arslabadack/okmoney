@@ -1,6 +1,7 @@
 from django import forms
 from django.db.models import fields
 from . import models
+from logging import PlaceHolder
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import ButtonHolder, Layout, Column, HTML, Submit, Div
@@ -10,7 +11,8 @@ class MoneyInForm(forms.ModelForm):
     data = forms.DateField(
         required=True,
         label='Data',
-        widget=forms.SelectDateWidget)
+        widget=forms.widgets.DateInput(attrs={'type': 'date'})
+    )
 
     categoria = forms.CharField(
         max_length=100,
@@ -48,17 +50,27 @@ class MoneyInForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Div(
-                Column(
-                    'data',
-                    'categoria',
-                    'valor',
-                    'observacao',
-                    css_class='col-lg-8'
-                ),
+                Column('data', css_class='col-md-2'),
+                css_class='row'
+            ),
+            Div(
+                Column('categoria', css_class='col-md-6'),
+                css_class='row'
+            ),
+            Div(
+                Column('valor', css_class='col-md-4'),
+                css_class='row'
+            ),
+            Div(
+                Column('observacao', css_class='col-lg-6'
+                       ),
                 css_class='row'
             ),
             ButtonHolder(
-                Submit('submit', 'Salvar', css_class='btn-primary')
+                HTML(
+                    '<a class="btn btn-danger m-3" href="{% url "index" %}" type="button">Cancelar</a>'
+                ),
+                Submit('submit', 'Salvar', css_class='float-end'),
             )
         )
 

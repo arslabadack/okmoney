@@ -1,10 +1,13 @@
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404
+from . import forms
+from . import models
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
-
 from django.http.response import HttpResponse, JsonResponse
 from django.template import loader
+from django.views.generic import ListView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import authenticate, login, logout
 
 
 def index(request):
@@ -35,14 +38,45 @@ def index(request):
     return render(request, 'index.html')  # , context)
 
 
-# def produto(request, pk):
-    # prod = Produto.objects.get(id=pk)
-#    prod = get_object_or_404(Produto, id=pk)
+class MoneyIn(View):
+    template_name = 'money_in.html'
 
-#    context = {
-#        'produto': prod
-#    }
-#    return render(request, 'produto.htm', context)
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        context = {
+            'money_in_form': forms.MoneyInForm(
+                data=self.request.POST or None
+            ),
+        }
+
+        self.money_in_form = context['money_in_form']
+
+        self.render = render(self.request, self.template_name, context)
+
+    def get(self, *args, **kwargs):
+        return self.render
+
+    def post(self, *args, **kwargs):
+        if not self.money_in_form.is_valid():
+            return self.render
+
+        new_money_in = models.MoneyIn(
+            data=self.money_in_form.cleaned_data.get('data'),
+            categoria=self.money_in_form.cleaned_data.get('categoria'),
+            valor=self.money_in_form.cleaned_data.get('valor'),
+            observacao=self.money_in_form.cleaned_data.get('observacao'),
+            # registered_by=self.request.user
+        )
+
+        new_money_in.save()
+
+        messages.success(
+            self.request,
+            'Entrada financeira registrada',
+        )
+
+        return redirect('okmoney_app:index')
 
 
 def error404(request, exception):
@@ -53,10 +87,6 @@ def error404(request, exception):
 def error500(request):
     template = loader.get_template('500.html')
     return HttpResponse(content=template.render(), content_type='text/html; charset=utf8', status=500)
-
-
-def money_in(request):
-    return render(request, 'money_in.html')
 
 
 def money_out(request):
