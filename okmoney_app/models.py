@@ -3,26 +3,22 @@ from django.db import models
 # from django.contrib.auth.models import User
 
 
-class MoneyIn(models.Model):
-    data = models.DateField(default='2020-01-01')
-    categoria = models.CharField(max_length=100)
-    valor = models.DecimalField('Preço', decimal_places=2, max_digits=8)
-    observacao = models.TextField(max_length=200, blank=True)
+class MoneyStatus(models.Model):
+    date = models.DateTimeField()
+    operation = models.BooleanField(default=False)
+    reason = models.CharField(max_length=200)
+    place = models.CharField(max_length=200, null=True, blank=True)
+    value = models.DecimalField(decimal_places=2, max_digits=8)
+    payment_method = models.CharField(max_length=100, null=True, blank=True)
+    observation = models.TextField(max_length=200, null=True, blank=True)
 
-    def __str__(self):
-        return self.nome
+
+class Meta:
+    ordering = ['id']
 
 
-class MoneyOut(models.Model):
-    data = models.DateField(default='2020-01-01')
-    motivo = models.CharField('Motivo', max_length=200)
-    local = models.CharField('Local', max_length=200)
-    valor = models.DecimalField('Valor', decimal_places=2, max_digits=8)
-    metodo_pagamento = models.CharField('Metodo de Pagamento', max_length=100)
-    observacao = models.TextField(max_length=200, null=True, blank=True)
-
-    def __str__(self):
-        return self.motivo
+def __str__(self):
+    return self.reason
 
 
 class reminders(models.Model):
@@ -33,4 +29,3 @@ class reminders(models.Model):
 
 
 # registered_by = models.ForeignKey(User, on_delete=DO_NOTHING, related_name='registered_by')
-# collected_by = models.ForeignKey(User, on_delete=DO_NOTHING, related_name='collected_by', null=True, blank=True)

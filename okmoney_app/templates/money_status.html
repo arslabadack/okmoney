@@ -2,10 +2,10 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block title %}OKMoney - Saídas{% endblock %}
+{% block title %}OKMoney - Lançamentos{% endblock %}
 
 {% block navigability %}
-<li class="breadcrumb-item active" aria-current="page">Saídas Financeiras</li>
+<li class="breadcrumb-item active" aria-current="page">Lançamentos Financeiros</li>
 {% endblock %}
 
 {% block content %}
@@ -13,12 +13,12 @@
     <div class="col-xl-11">
         <div class="card">
             <div class="card-header pb-0 d-flex">
-                <h3 class="card-title">Saídas Financeiras</h3>
+                <h3 class="card-title">Lançamentos Financeiros</h3>
             </div>
             <div class="card-content">
                 <div class="card-body adjust-content">
                     {% csrf_token %}
-                    {% crispy money_out_form %}
+                    {% crispy money_form %}
                 </div>
             </div>
         </div>

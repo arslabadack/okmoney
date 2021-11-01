@@ -31,19 +31,19 @@ class Index(View):
         pass
 
 
-class MoneyIn(View):
-    template_name = 'money_in.html'
+class MoneyReleases(View):
+    template_name = 'money_status.html'
 
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
 
         context = {
-            'money_in_form': forms.MoneyInForm(
+            'money_form': forms.MoneyForm(
                 data=self.request.POST or None
             ),
         }
 
-        self.money_in_form = context['money_in_form']
+        self.money_form = context['money_form']
 
         self.render = render(self.request, self.template_name, context)
 
@@ -51,50 +51,54 @@ class MoneyIn(View):
         return self.render
 
     def post(self, *args, **kwargs):
-        if not self.money_in_form.is_valid():
+        if not self.money_form.is_valid():
             return self.render
 
-        new_money_in = models.MoneyIn(
-            data=self.money_in_form.cleaned_data.get('data'),
-            categoria=self.money_in_form.cleaned_data.get('categoria'),
-            valor=self.money_in_form.cleaned_data.get('valor'),
-            observacao=self.money_in_form.cleaned_data.get('observacao'),
+        new_money = models.MoneyStatus(
+            date=self.money_form.cleaned_data.get('date'),
+            operation=self.money_form.cleaned_data.get('operation'),
+            reason=self.money_form.cleaned_data.get('reason'),
+            place=self.money_form.cleaned_data.get('place'),
+            value=self.money_form.cleaned_data.get('value'),
+            payment_method=self.money_form.cleaned_data.get(
+                'payment_method'),
+            observation=self.money_form.cleaned_data.get('observation'),
             # registered_by=self.request.user
         )
-
-        new_money_in.save()
+        new_money.save()
 
         messages.success(
             self.request,
-            'Entrada financeira registrada',
+            'Lançamento financeiro registrado',
         )
 
-        return redirect('okmoney_app:index')
+        return redirect('index')
 
 
-class MoneyInList(ListView):
-    context_object_name = 'money_in'
+class MoneyList(ListView):
+    # TODO: criar o template de listagem?
+    template_name = 'money_list.html'
+    context_object_name = 'money_list'
     paginate_by = 10
-    model = models.MoneyIn
+    model = models.MoneyStatus
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
 
 
-class MoneyOut(View):
-    template_name = 'money_out.html'
+class MoneyDetails(View):
+    template_name = 'money_details.html'
 
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
+# TODO: duvida se é realmente self.money_status
+        self.money_status = get_object_or_404(
+            models.MoneyStatus, pk=self.kwargs.get('pk'))
 
         context = {
-            'money_out_form': forms.MoneyOutForm(
-                data=self.request.POST or None
-            ),
+            'money_status': self.money_status,
         }
-
-        self.money_out_form = context['money_out_form']
 
         self.render = render(self.request, self.template_name, context)
 
@@ -102,37 +106,7 @@ class MoneyOut(View):
         return self.render
 
     def post(self, *args, **kwargs):
-        if not self.money_out_form.is_valid():
-            return self.render
-
-        new_money_out = models.MoneyOut(
-            data=self.new_money_out.cleaned_data.get('data'),
-            motivo=self.new_money_out.cleaned_data.get('motivo'),
-            local=self.new_money_out.cleaned_data.get('local'),
-            valor=self.new_money_out.cleaned_data.get('valor'),
-            metodo_pagamento=self.new_money_out.cleaned_data.get(
-                'metodo_pagamento'),
-            observacao=self.new_money_out.cleaned_data.get('observacao'),
-            # registered_by=self.request.user
-        )
-        new_money_out.save()
-
-        messages.success(
-            self.request,
-            'Saída financeira registrada',
-        )
-
-        return redirect('okmoney_app:index')
-
-
-class MoneyOutList(ListView):
-    context_object_name = 'money_out'
-    paginate_by = 10
-    model = models.MoneyOut
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+        pass
 
 
 def error404(request, exception):
