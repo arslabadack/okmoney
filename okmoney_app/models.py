@@ -5,7 +5,10 @@ from django.db import models
 
 class MoneyReleases(models.Model):
     date = models.DateTimeField()
-    operation = models.BooleanField(default=False)
+    operation = models.CharField(max_length=100, choices=(
+        ('in', 'Entrada'),
+        ('out', 'Saída'),
+    ), null=False, blank=False)
     reason = models.CharField(max_length=200)
     place = models.CharField(max_length=200, null=True, blank=True)
     value = models.DecimalField(decimal_places=2, max_digits=8)

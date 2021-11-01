@@ -4,25 +4,38 @@
 
 {% block title %}OKMoney - Lançamentos{% endblock %}
 
-{% block navigability %}
-<li class="breadcrumb-item active" aria-current="page">Lançamentos Financeiros</li>
+{% block breadcrumb %}
+<div class="row page-titles">
+    <div class="col-md-6 col-8 align-self-center">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item">Lançamentos Financeiros</li>
+        </ol>
+    </div>
+    <div class="col-md-6 col-4 align-self-center">
+        <a href="{% url 'releases' %}">
+            <button class="btn-rounded pull-right hidden-sm-down btn-primary">Lançamentos</button>
+        </a>
+        <a href="https://themewagon.com/themes/free-bootstrap-4-admin-dashboard-template/">
+            <button class="btn-rounded pull-right hidden-sm-down btn-info">Download Here</button>
+        </a>
+        <a href="https://themewagon.com/themes/free-bootstrap-4-admin-dashboard-template/">
+            <button class="btn-rounded pull-right hidden-sm-down btn-warning">Blog</button>
+        </a>
+    </div>
+
+</div>
 {% endblock %}
 
 {% block content %}
 <div class="row">
-    <div class="col-xl-11">
+    <div class="col-xl-12">
         <div class="card">
-            <div class="card-header pb-0 d-flex">
-                <h3 class="card-title">Lançamentos Financeiros</h3>
-            </div>
-            <div class="card-content">
-                <div class="card-body adjust-content">
-                    {% csrf_token %}
-                    {% crispy money_form %}
-                </div>
+            <div class="card-block">
+                {% csrf_token %}
+                {% crispy money_form %}
             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}

@@ -8,48 +8,57 @@
     {% include 'partial/_head.html' %}
 </head>
 
-<body>
-    <!--Preloader start-->
-    <div id="preloader">
-        <div class="loader">
-            <svg class="circular" viewBox="25 25 50 50">
-                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
-            </svg>
-        </div>
+<body class="fix-header fix-sidebar card-no-border">
+
+    <!--Preloader-->
+
+    <div class="preloader">
+        <svg class="circular" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" /> </svg>
     </div>
-    <!--Preloader end-->
 
-
-    <!--Main wrapper start-->
+    <!--Main wrapper-->
     <div id="main-wrapper">
 
-        <!--Nav header start-->
-        {% include 'partial/_nav_header.html' %}
-        <!--Nav header end-->
-
-        <!--Header start-->
+        <!--Topbar header-->
         {% include 'partial/_header.html' %}
-        <!--Header end-->
 
-        <!--Content body start-->
-        <div class="content-body">
+        <!--End Topbar header-->
 
-            {% block content %}
-            
-            {% endblock %}
- 
+        <!-- Page wrapper  -->
+        <div class="page-wrapper">
+
+            <!--Container fluid-->
+            <div class="container-fluid">
+
+                <!-- Bread crumb-->
+                {% block breadcrumb %}
+
+                {% endblock %}
+                <!-- End Bread crumb-->
+
+                <!-- Start Page Content -->
+                {% block content %}
+
+                {% endblock %}
+                <!-- End Page Content -->
+
+            </div>
+            <!-- End Container fluid  -->
+
+            <!-- footer -->
             <div>
                 {% include 'partial/_footer.html' %}
             </div>
-        <!--Content body end-->
+            <!-- End footer -->
+
         </div>
-    <!--Main wrapper end-->
+        <!-- End Page wrapper  -->
+
     </div>
-
-    {% block scripts %}
-        
-    {% endblock %}
-
+    <!-- End Wrapper -->
+    <!-- All Script -->
+    {% include 'partial/_script.html' %}
 </body>
 
 </html>

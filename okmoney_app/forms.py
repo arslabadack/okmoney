@@ -6,17 +6,25 @@ from logging import PlaceHolder
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import ButtonHolder, Layout, Column, HTML, Submit, Div
 
+RELEASE_CHOICES = (
+    ('', 'Selecione'),
+    ('in', 'Entrada'),
+    ('out', 'Saída'),
+),
+
 
 class MoneyForm(forms.ModelForm):
-    date = forms.DateField(
+    date = forms.DateTimeField(
         required=True,
         label='Data',
-        widget=forms.widgets.DateInput(attrs={'type': 'date'})
-    )
+        widget=forms.widgets.DateInput(attrs={'type': 'date'}),
+    ),
 
-    operation = forms.BooleanField(
+    operation = forms.CharField(
+        # TODO: Como fazer pelo crispy?
         required=True,
-        label='Entrada Financeira'
+        label='Entrada Financeira',
+        widget=forms.ChoiceField(choices=RELEASE_CHOICES),
     )
 
     reason = forms.CharField(
