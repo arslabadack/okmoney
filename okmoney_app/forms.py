@@ -56,7 +56,7 @@ class MoneyForm(forms.ModelForm):
     )
 
     class Meta:
-        model = models.MoneyStatus
+        model = models.MoneyReleases
         fields = ['date', 'operation', 'reason', 'place', 'value',
                   'payment_method', 'observation']
 

@@ -32,7 +32,7 @@ class Index(View):
 
 
 class MoneyReleases(View):
-    template_name = 'money_status.html'
+    template_name = 'money_releases.html'
 
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
@@ -54,7 +54,7 @@ class MoneyReleases(View):
         if not self.money_form.is_valid():
             return self.render
 
-        new_money = models.MoneyStatus(
+        new_money = models.MoneyReleases(
             date=self.money_form.cleaned_data.get('date'),
             operation=self.money_form.cleaned_data.get('operation'),
             reason=self.money_form.cleaned_data.get('reason'),
@@ -80,7 +80,7 @@ class MoneyList(ListView):
     template_name = 'money_list.html'
     context_object_name = 'money_list'
     paginate_by = 10
-    model = models.MoneyStatus
+    model = models.MoneyReleases
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -93,11 +93,11 @@ class MoneyDetails(View):
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
 # TODO: duvida se é realmente self.money_status
-        self.money_status = get_object_or_404(
-            models.MoneyStatus, pk=self.kwargs.get('pk'))
+        self.money_releases = get_object_or_404(
+            models.MoneyReleases, pk=self.kwargs.get('pk'))
 
         context = {
-            'money_status': self.money_status,
+            'money_releases': self.money_releases,
         }
 
         self.render = render(self.request, self.template_name, context)

@@ -3,7 +3,7 @@ from django.db import models
 # from django.contrib.auth.models import User
 
 
-class MoneyStatus(models.Model):
+class MoneyReleases(models.Model):
     date = models.DateTimeField()
     operation = models.BooleanField(default=False)
     reason = models.CharField(max_length=200)
