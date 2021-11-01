@@ -1,11 +1,28 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% load static %}
 
-{% block title %}OKMoney{% endblock %}
+{% block title %}OKMoney - Saídas{% endblock %}
+
+{% block navigability %}
+<li class="breadcrumb-item active" aria-current="page">Saídas Financeiras</li>
+{% endblock %}
 
 {% block content %}
-<p>
-    teste
-</p>
+<div class="row">
+    <div class="col-xl-11">
+        <div class="card">
+            <div class="card-header pb-0 d-flex">
+                <h3 class="card-title">Saídas Financeiras</h3>
+            </div>
+            <div class="card-content">
+                <div class="card-body adjust-content">
+                    {% csrf_token %}
+                    {% crispy money_out_form %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

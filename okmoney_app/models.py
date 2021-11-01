@@ -14,10 +14,10 @@ class MoneyIn(models.Model):
 
 
 class MoneyOut(models.Model):
+    data = models.DateField(default='2020-01-01')
     motivo = models.CharField('Motivo', max_length=200)
     local = models.CharField('Local', max_length=200)
     valor = models.DecimalField('Valor', decimal_places=2, max_digits=8)
-    data = models.DateField('Data')
     metodo_pagamento = models.CharField('Metodo de Pagamento', max_length=100)
     observacao = models.TextField(max_length=200, null=True, blank=True)
 

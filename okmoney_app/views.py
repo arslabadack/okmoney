@@ -10,32 +10,25 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 
 
-def index(request):
- #   form = ContatoForm(request.POST or None)
+class Index(View):
+    template_name = 'index.html'
 
-    # if str(request.method) == 'POST':
-    #     if form.is_valid():
-    #         nome = form.cleaned_data['nome']
-    #         email = form.cleaned_data['email']
-    #         mensagem = form.cleaned_data['mensagem']
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
 
-    #         print('Mensagem enviada')
-    #         print(f'Nome: {nome}')
+        context = {
+            # 'total_in': models.MoneyIn.objects.get(valor).sum(),
+            #            'total_out': models.MoneyOut.objects.all().aggregate(Sum('amount'))['amount__sum'],
+            #            'total_difference': models.MoneyIn.objects.all().aggregate(Sum('amount'))#['amount__sum'] - models.MoneyOut.objects.all().aggregate(Sum('amount'))['amount__sum'],
+        }
 
-    #         messages.success(request, 'Mensagem enviada com sucesso!')
-    #         form = ContatoForm()
-    #     else:
-    #         messages.error(request, 'Formulário inválido')
+        self.render = render(self.request, self.template_name, context)
 
-    # context = {
-    #     'form': form,
-    # }
-    #    produtos = Produto.objects.all()
-    #
-    #    context = {
-    #        'produtos': produtos
-    #    }
-    return render(request, 'index.html')  # , context)
+    def get(self, *args, **kwargs):
+        return self.render
+
+    def post(self, *args, **kwargs):
+        pass
 
 
 class MoneyIn(View):
@@ -79,6 +72,69 @@ class MoneyIn(View):
         return redirect('okmoney_app:index')
 
 
+class MoneyInList(ListView):
+    context_object_name = 'money_in'
+    paginate_by = 10
+    model = models.MoneyIn
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+class MoneyOut(View):
+    template_name = 'money_out.html'
+
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        context = {
+            'money_out_form': forms.MoneyOutForm(
+                data=self.request.POST or None
+            ),
+        }
+
+        self.money_out_form = context['money_out_form']
+
+        self.render = render(self.request, self.template_name, context)
+
+    def get(self, *args, **kwargs):
+        return self.render
+
+    def post(self, *args, **kwargs):
+        if not self.money_out_form.is_valid():
+            return self.render
+
+        new_money_out = models.MoneyOut(
+            data=self.new_money_out.cleaned_data.get('data'),
+            motivo=self.new_money_out.cleaned_data.get('motivo'),
+            local=self.new_money_out.cleaned_data.get('local'),
+            valor=self.new_money_out.cleaned_data.get('valor'),
+            metodo_pagamento=self.new_money_out.cleaned_data.get(
+                'metodo_pagamento'),
+            observacao=self.new_money_out.cleaned_data.get('observacao'),
+            # registered_by=self.request.user
+        )
+        new_money_out.save()
+
+        messages.success(
+            self.request,
+            'Saída financeira registrada',
+        )
+
+        return redirect('okmoney_app:index')
+
+
+class MoneyOutList(ListView):
+    context_object_name = 'money_out'
+    paginate_by = 10
+    model = models.MoneyOut
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
 def error404(request, exception):
     template = loader.get_template('404.html')
     return HttpResponse(content=template.render(), content_type='text/html; charset=utf8', status=404)
@@ -88,9 +144,6 @@ def error500(request):
     template = loader.get_template('500.html')
     return HttpResponse(content=template.render(), content_type='text/html; charset=utf8', status=500)
 
-
-def money_out(request):
-    return render(request, 'money_out.html')
 
 # class Login(View):
 #     def get(self, *args, **kwargs):

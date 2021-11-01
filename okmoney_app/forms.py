@@ -79,7 +79,8 @@ class MoneyOutForm(forms.ModelForm):
     data = forms.DateField(
         required=True,
         label='Data',
-        widget=forms.SelectDateWidget)
+        widget=forms.widgets.DateInput(attrs={'type': 'date'})
+    )
 
     motivo = forms.CharField(
         max_length=200,
@@ -106,8 +107,8 @@ class MoneyOutForm(forms.ModelForm):
     metodo_pagamento = forms.CharField(
         max_length=100,
         required=True,
-        label='Metodo de Pagamento',
-        widget=forms.Textarea(attrs={'placeholder': 'Metodo de Pagamento'}),
+        label='Método de Pagamento',
+        widget=forms.TextInput(attrs={'placeholder': 'Metodo de Pagamento'}),
     )
 
     observacao = forms.CharField(
@@ -132,18 +133,33 @@ class MoneyOutForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Div(
-                Column(
-                    'data',
-                    'motivo',
-                    'local',
-                    'valor',
-                    'metodo_pagamento',
-                    'observacao',
-                    css_class='col-lg-8'
-                ),
+                Column('data', css_class='col-md-2'),
+                css_class='row'
+            ),
+            Div(
+                Column('motivo', css_class='col-md-6'),
+                css_class='row'
+            ),
+            Div(
+                Column('local', css_class='col-md-6'),
+                css_class='row'
+            ),
+            Div(
+                Column('valor', css_class='col-md-2'),
+                css_class='row'
+            ),
+            Div(
+                Column('metodo_pagamento', css_class='col-md-6'),
+                css_class='row'
+            ),
+            Div(
+                Column('observacao', css_class='col-lg-6'),
                 css_class='row'
             ),
             ButtonHolder(
-                Submit('submit', 'Salvar', css_class='btn-primary')
+                HTML(
+                    '<a class="btn btn-danger m-3" href="{% url "index" %}" type="button">Cancelar</a>'
+                ),
+                Submit('submit', 'Salvar', css_class='float-end'),
             )
         )
