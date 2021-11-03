@@ -1,16 +1,26 @@
-<header class="topbar">
-    <nav class="navbar top-navbar navbar-toggleable-sm navbar-light">
+{% load static %}
 
-        <div class="navbar-collapse">
-            <!--User profile-->
-            <ul class="navbar-nav my-lg-0">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href=""
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img
-                            src="assets/images/users/1.jpg" alt="user" class="profile-pic m-r-5" />Markarn
-                        Doe</a>
+<div class="header">
+    <div class="header-content clearfix">
+        <div class="header-right">
+            <ul class="clearfix">
+                <li class="icons dropdown">
+                    <div class="user-img c-pointer position-relative" data-toggle="dropdown">
+                        <span class="activity active"></span>
+                        <img src="images/user/1.png" height="40" width="40" alt="">
+                    </div>
+                    <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
+                        <div class="dropdown-content-body">
+                            <ul>
+                                <li><a href="blog.html"><i class="icon-user"></i> <span>Blog</span></a>
+                                </li>
+                                <li><a href="page-login.html"><i class="icon-key"></i> <span>Logout</span></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </li>
             </ul>
         </div>
-    </nav>
-</header>
+    </div>
+</div>

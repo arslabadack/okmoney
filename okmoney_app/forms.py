@@ -6,25 +6,29 @@ from logging import PlaceHolder
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import ButtonHolder, Layout, Column, HTML, Submit, Div
 
-RELEASE_CHOICES = (
-    ('', 'Selecione'),
-    ('in', 'Entrada'),
-    ('out', 'Saída'),
-),
-
 
 class MoneyForm(forms.ModelForm):
-    date = forms.DateTimeField(
+    date = forms.DateField(
         required=True,
         label='Data',
-        widget=forms.widgets.DateInput(attrs={'type': 'date'}),
-    ),
+        input_formats=['%YYYY-%m-%Y'],
+        widget=forms.DateInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Data',
+                'type': 'date'
+            }
+        )
+    )
 
-    operation = forms.CharField(
-        # TODO: Como fazer pelo crispy?
-        required=True,
-        label='Entrada Financeira',
-        widget=forms.ChoiceField(choices=RELEASE_CHOICES),
+    operation = forms.ChoiceField(
+        initial='Não informado',
+        required=False,
+        label='Forma de Acesso:',
+        choices=[
+            ('entrada', 'Entrada Financeira'),
+            ('saida', 'Saída Financeira'),
+        ],
     )
 
     reason = forms.CharField(
@@ -49,11 +53,15 @@ class MoneyForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={'placeholder': 'Valor'}),
     )
 
-    payment_method = forms.CharField(
-        max_length=100,
+    payment_method = forms.ChoiceField(
+        initial='Não informado',
         required=False,
-        label='Método de Pagamento',
-        widget=forms.TextInput(attrs={'placeholder': 'Metodo de Pagamento'}),
+        label='Forma de Acesso:',
+        choices=[
+            ('dinheiro', 'Dinheiro'),
+            ('card_d', 'Cartão de Débito'),
+            ('card_c', 'Cartão de Crédito'),
+        ],
     )
 
     observation = forms.CharField(
@@ -78,7 +86,7 @@ class MoneyForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Div(
-                Column('date', css_class='col-md-2'),
+                Column('date', css_class='col-md-3'),
                 css_class='row'
             ),
             Div(
@@ -86,15 +94,15 @@ class MoneyForm(forms.ModelForm):
                 css_class='row'
             ),
             Div(
-                Column('reason', css_class='col-md-6'),
+                Column('reason', css_class='col-md-8'),
                 css_class='row'
             ),
             Div(
-                Column('place', css_class='col-md-6'),
+                Column('place', css_class='col-md-8'),
                 css_class='row'
             ),
             Div(
-                Column('value', css_class='col-md-2'),
+                Column('value', css_class='col-md-4'),
                 css_class='row'
             ),
             Div(
@@ -102,13 +110,14 @@ class MoneyForm(forms.ModelForm):
                 css_class='row'
             ),
             Div(
-                Column('observation', css_class='col-lg-6'),
+                Column('observation', css_class='col-md-11'),
                 css_class='row'
             ),
             ButtonHolder(
                 HTML(
-                    '<a class="btn btn-danger m-3" href="{% url "index" %}" type="button">Cancelar</a>'
+                    '<a class="btn mb-1 btn-rounded btn-warning" href="{% url "releases" %}" type="button">Cancelar</a>'
                 ),
-                Submit('submit', 'Salvar', css_class='float-end'),
+                Submit('submit', 'Salvar',
+                       css_class='btn mb-1 btn-rounded btn-success'),
             )
         )

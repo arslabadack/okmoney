@@ -8,57 +8,51 @@
     {% include 'partial/_head.html' %}
 </head>
 
-<body class="fix-header fix-sidebar card-no-border">
+<body>
 
-    <!--Preloader-->
-
-    <div class="preloader">
-        <svg class="circular" viewBox="25 25 50 50">
-            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" /> </svg>
+    <!--Preloader start-->
+    <div id="preloader">
+        <div class="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
+            </svg>
+        </div>
     </div>
+    <!--Preloader end-->
 
-    <!--Main wrapper-->
+
+    <!--Main wrapper start-->
     <div id="main-wrapper">
 
-        <!--Topbar header-->
+        <!--Nav header start-->
+        {% include 'partial/_nav_header.html' %}
+        <!--Nav header end-->
+
+        <!--Header start-->
         {% include 'partial/_header.html' %}
+        <!--Header end-->
 
-        <!--End Topbar header-->
+        <!--Breadcrumb start-->
+        {% block breadcrumb %}
 
-        <!-- Page wrapper  -->
-        <div class="page-wrapper">
+        {% endblock %}
+        <!--Breadcrumb end-->
 
-            <!--Container fluid-->
-            <div class="container-fluid">
+        <!--Content body start-->
+        {% block content %}
 
-                <!-- Bread crumb-->
-                {% block breadcrumb %}
+        {% endblock %}
+        <!--Content body end-->
 
-                {% endblock %}
-                <!-- End Bread crumb-->
-
-                <!-- Start Page Content -->
-                {% block content %}
-
-                {% endblock %}
-                <!-- End Page Content -->
-
-            </div>
-            <!-- End Container fluid  -->
-
-            <!-- footer -->
-            <div>
-                {% include 'partial/_footer.html' %}
-            </div>
-            <!-- End footer -->
-
-        </div>
-        <!-- End Page wrapper  -->
-
+        <!--Footer start-->
+        {% include 'partial/_footer.html' %}
+        <!--Footer end-->
     </div>
-    <!-- End Wrapper -->
-    <!-- All Script -->
+    <!--Main wrapper end-->
+
+    <!--Scripts-->
     {% include 'partial/_script.html' %}
+
 </body>
 
 </html>

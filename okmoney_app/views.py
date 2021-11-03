@@ -8,6 +8,7 @@ from django.template import loader
 from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Sum
 
 
 class Index(View):
@@ -17,9 +18,9 @@ class Index(View):
         super().setup(*args, **kwargs)
 
         context = {
-            # 'total_in': models.MoneyIn.objects.get(valor).sum(),
-            #            'total_out': models.MoneyOut.objects.all().aggregate(Sum('amount'))['amount__sum'],
-            #            'total_difference': models.MoneyIn.objects.all().aggregate(Sum('amount'))#['amount__sum'] - models.MoneyOut.objects.all().aggregate(Sum('amount'))['amount__sum'],
+            'total_in': models.MoneyReleases.objects.filter(operation='entrada').aggregate(total=Sum('value')).get('total'),
+            'total_out': models.MoneyReleases.objects.filter(operation='saida').aggregate(total=Sum('value')).get('total'),
+            'total_difference': models.MoneyReleases.objects.filter(operation='entrada').aggregate(total=Sum('value')).get('total') - models.MoneyReleases.objects.filter(operation='saida').aggregate(total=Sum('value')).get('total'),
         }
 
         self.render = render(self.request, self.template_name, context)
@@ -76,10 +77,9 @@ class MoneyReleases(View):
 
 
 class MoneyList(ListView):
-    # TODO: criar o template de listagem?
-    template_name = 'money_list.html'
+    template_name = 'money_releases.html'
     context_object_name = 'money_list'
-    paginate_by = 10
+    paginate_by = 20
     model = models.MoneyReleases
 
     def get_context_data(self, **kwargs):
@@ -88,7 +88,7 @@ class MoneyList(ListView):
 
 
 class MoneyDetails(View):
-    template_name = 'money_details.html'
+    template_name = 'money_releases.html'
 
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
