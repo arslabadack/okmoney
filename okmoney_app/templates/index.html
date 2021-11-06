@@ -4,99 +4,64 @@
 {% block title %}OKMoney{% endblock %}
 
 {% block content %}
-<div class="content-body">
-    <div class="container-fluid mt-3">
-        <div class="row">
-            <div class="col-3">
-                <div class="card">
-                    <div class="stat-widget-one">
-                        <div class="stat-content">
-                            <div class="stat-text">Total Entradas Financeiras</div>
-                            <div class="stat-digit gradient-3-text">R$ {{ total_in }}</div>
+    <div class="content-body">
+        <div class="container-fluid mt-3">
+            <div class="row">
+                <div class="col-3">
+                    <div class="card">
+                        <div class="stat-widget-one">
+                            <div class="stat-content">
+                                <div class="stat-text">Total Entradas Financeiras</div>
+                                <div class="stat-digit gradient-3-text">R$ {{ total_in }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card">
+                        <div class="stat-widget-one">
+                            <div class="stat-content">
+                                <div class="stat-text">Total Saídas Financeiras</div>
+                                <div class="stat-digit gradient-3-text">R$ {{ total_out }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card">
+                        <div class="stat-widget-one">
+                            <div class="stat-content">
+                                <div class="stat-text">Total Saldo</div>
+                                <div class="stat-digit gradient-3-text">R$ {{ total_difference }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card">
+                        <div class="stat-widget-one">
+                            <div class="stat-content">
+                                <div class="stat-text">Análise de Caixa</div>
+                            </div>
+                            <br>
+                            <div class="d-inline-block">
+                                <a href="{% url 'releases' %}">
+                                    <button type="button" class="btn gradient-3 btn-lg border-0 btn-rounded px-5">Fluxo de
+                                        Caixa</button>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-3">
-                <div class="card">
-                    <div class="stat-widget-one">
-                        <div class="stat-content">
-                            <div class="stat-text">Total Saídas Financeiras</div>
-                            <div class="stat-digit gradient-3-text">R$ {{ total_out }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="card">
-                    <div class="stat-widget-one">
-                        <div class="stat-content">
-                            <div class="stat-text">Total Saldo</div>
-                            <div class="stat-digit gradient-3-text">R$ {{ total_difference }}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-3">
-                <div class="card">
-                    <div class="stat-widget-one">
-                        <div class="stat-content">
-                            <div class="stat-text">Análise de Caixa</div>
-                        </div>
-                        <br>
-                        <div class="d-inline-block">
-                            <a href="{% url 'releases' %}">
-                                <button type="button" class="btn gradient-3 btn-lg border-0 btn-rounded px-5">Fluxo de
-                                    Caixa</button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="row">
-                    <div class="col-12">
+            <div class="col-lg-6">
                         <div class="card">
-                            <div class="card-body pb-0 d-flex justify-content-between">
-                                <div>
-                                    <h4 class="mb-1">Product Sales</h4>
-                                    <p>Total Earnings of the Month</p>
-                                    <h3 class="m-0">$ 12,555</h3>
-                                </div>
-                                <div>
-                                    <ul>
-                                        <li class="d-inline-block mr-3"><a class="text-dark" href="#">Day</a></li>
-                                        <li class="d-inline-block mr-3"><a class="text-dark" href="#">Week</a></li>
-                                        <li class="d-inline-block"><a class="text-dark" href="#">Month</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="chart-wrapper">
-                                <canvas id="chart_widget_2"></canvas>
-                            </div>
                             <div class="card-body">
-                                <div class="d-flex justify-content-between">
-                                    <div class="w-100 mr-2">
-                                        <h6>Pixel 2</h6>
-                                        <div class="progress" style="height: 6px">
-                                            <div class="progress-bar bg-danger" style="width: 40%"></div>
-                                        </div>
-                                    </div>
-                                    <div class="ml-2 w-100">
-                                        <h6>iPhone X</h6>
-                                        <div class="progress" style="height: 6px">
-                                            <div class="progress-bar bg-primary" style="width: 80%"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <h4 class="card-title">Sales</h4>
+                                <canvas id="sales-chart" width="500" height="250"></canvas>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
             <div class="col-lg-13 col-md-13">
                 <div class="card">
                     <div class="card-body px-0">
@@ -107,8 +72,8 @@
                                     <ul id="todo_list">
                                         <li><label><input type="checkbox"><i></i><span>Get up</span><a href='#'
                                                     class="ti-trash"></a></label></li>
-                                        <li><label><input type="checkbox" checked><i></i><span>Stand up</span><a
-                                                    href='#' class="ti-trash"></a></label></li>
+                                        <li><label><input type="checkbox" checked><i></i><span>Stand up</span><a href='#'
+                                                    class="ti-trash"></a></label></li>
                                         <li><label><input type="checkbox"><i></i><span>Don't give up the fight.</span><a
                                                     href='#' class="ti-trash"></a></label></li>
                                         <li><label><input type="checkbox" checked><i></i><span>Do something
@@ -126,6 +91,5 @@
             </div>
         </div>
     </div>
-    <!-- #/ container -->
-</div>
+
 {% endblock %}

@@ -38,11 +38,8 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <form>
-                                                {% csrf_token %}
-                                                {% crispy money_form %}
-                                            </form>
-                                        </div>
+                                            {% crispy money_form %}
+                                        </div> 
                                     </div>
                                 </div>
                             </div>

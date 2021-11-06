@@ -17,10 +17,26 @@ class Index(View):
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
 
+        total_in = models.MoneyReleases.objects.filter(
+            operation='entrada').aggregate(total=Sum('value')).get('total')
+        total_out = models.MoneyReleases.objects.filter(
+            operation='saida').aggregate(total=Sum('value')).get('total')
+
+        # TODO: implementar a lógica de validação
+        if total_in == None and total_out == None:
+            total_in = 0
+            total_out = 0
+            total_difference = 0
+        elif total_in == None:
+            total_out = 0
+            total_difference = 0
+        else:
+            total_difference = total_in - total_out
+
         context = {
-            'total_in': models.MoneyReleases.objects.filter(operation='entrada').aggregate(total=Sum('value')).get('total'),
-            'total_out': models.MoneyReleases.objects.filter(operation='saida').aggregate(total=Sum('value')).get('total'),
-            'total_difference': models.MoneyReleases.objects.filter(operation='entrada').aggregate(total=Sum('value')).get('total') - models.MoneyReleases.objects.filter(operation='saida').aggregate(total=Sum('value')).get('total'),
+            'total_in': total_in,
+            'total_out': total_out,
+            'total_difference': total_difference,
         }
 
         self.render = render(self.request, self.template_name, context)
@@ -73,7 +89,7 @@ class MoneyReleases(View):
             'Lançamento financeiro registrado',
         )
 
-        return redirect('index')
+        return redirect('releases')
 
 
 class MoneyList(ListView):

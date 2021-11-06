@@ -10,21 +10,20 @@ from crispy_forms.layout import ButtonHolder, Layout, Column, HTML, Submit, Div
 class MoneyForm(forms.ModelForm):
     date = forms.DateField(
         required=True,
-        label='Data',
-        input_formats=['%YYYY-%m-%Y'],
+        label='Data ',
+        input_formats=['%d/%m/%Y'],
         widget=forms.DateInput(
             attrs={
-                'class': 'form-control',
+                'class': 'mydatepicker',
                 'placeholder': 'Data',
-                'type': 'date'
             }
         )
     )
 
     operation = forms.ChoiceField(
         initial='Não informado',
-        required=False,
-        label='Forma de Acesso:',
+        required=True,
+        label='Operação Financeira ',
         choices=[
             ('entrada', 'Entrada Financeira'),
             ('saida', 'Saída Financeira'),
@@ -34,14 +33,14 @@ class MoneyForm(forms.ModelForm):
     reason = forms.CharField(
         max_length=200,
         required=True,
-        label='Motivo',
+        label='Motivo ',
         widget=forms.TextInput(attrs={'placeholder': 'Motivo'}),
     )
 
     place = forms.CharField(
         max_length=200,
         required=False,
-        label='Local',
+        label='Local ',
         widget=forms.TextInput(attrs={'placeholder': 'Local'}),
     )
 
@@ -49,18 +48,21 @@ class MoneyForm(forms.ModelForm):
         max_digits=8,
         decimal_places=2,
         required=True,
-        label='Valor',
+        label='Valor (R$) ',
         widget=forms.NumberInput(attrs={'placeholder': 'Valor'}),
     )
 
     payment_method = forms.ChoiceField(
         initial='Não informado',
-        required=False,
-        label='Forma de Acesso:',
+        required=True,
+        label='Método ',
         choices=[
             ('dinheiro', 'Dinheiro'),
             ('card_d', 'Cartão de Débito'),
             ('card_c', 'Cartão de Crédito'),
+            ('pix', 'PIX'),
+            ('transferencia', 'Transferência'),
+            ('deposito', 'Depósito'),
         ],
     )
 
@@ -82,6 +84,7 @@ class MoneyForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(MoneyForm, self).__init__(*args, **kwargs)
+
         self.helper = FormHelper(self)
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
