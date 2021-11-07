@@ -4,99 +4,30 @@
 
 {% block content %}
 
-<div class="content-body">
+    <div class="content-body">
 
-    {% block breadcrumb %}
-    <div class="row page-titles mx-0">
-        <div class="col p-md-0">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item active"><a href="{% url 'index' %}">Home</a></li>
-                <li class="breadcrumb-item"><a href="javascript:void(0)">Fluxo de Caixa</a></li>
-            </ol>
-        </div>
-    </div>
-    {% endblock %}
+        {% block breadcrumb %}
+            <div class="row page-titles mx-0">
+                <div class="col p-md-0">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active"><a href="{% url 'index' %}">Home</a></li>
+                        <li class="breadcrumb-item">Lançamentos Financeiros</li>
+                    </ol>
+                </div>
+            </div>
+        {% endblock %}
 
-    <div class="container-fluid mt-3">
-        <div class="row">
-            <div class="col-lg-3 col-sm-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Ações</h4>
-                        <div class="bootstrap-modal">
-                            <button type="button" class="btn gradient-3 btn-lg border-0 btn-rounded px-5"
-                                data-toggle="modal" data-target="#newRealease" data-whatever="@getbootstrap">Novo
-                                Lançamento</button>
-                            <div class="modal fade" id="newRealease" tabindex="-1" role="dialog"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Lançamentos Financeiros</h5>
-                                            <button type="button" class="close"
-                                                data-dismiss="modal"><span>&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            {% crispy money_form %}
-                                        </div> 
-                                    </div>
-                                </div>
-                            </div>
+        <div class="container-fluid mt-3">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Ações</h4>
+                            {% crispy money_form %}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
-            <div class="card">
-                <div class="card-body">
-                    {% if money_list %}
-                        <h4 class="card-title">Lançamentos Financeiros</h4>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped verticle-middle">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Data</th>
-                                        <th scope="col">Operação</th>
-                                        <th scope="col">Motivo</th>
-                                        <th scope="col">Local</th>
-                                        <th scope="col">Valor</th>
-                                        <th scope="col">Método de Pagamento</th>
-                                        <th scope="col">Observação</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for releases in money_list %}
-                                        <tr>
-                                            <td>{{ releases.date }}</td>
-                                            <td>{{ releases.operation }}</td>
-                                            <td>{{ releases.reason }}</td>
-                                            <td>{{ releases.place }}</td>
-                                            <td>{{ releases.value }}</td>
-                                            <td>{{ releases.payment_method }}</td>
-                                            <td>{{ releases.observation }}</td>
-                                            <td><span><a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i
-                                                            class="fa fa-pencil color-muted m-r-5"></i> </a><a href="#"
-                                                        data-toggle="tooltip" data-placement="top" title="Close"><i
-                                                            class="fa fa-close color-danger"></i></a></span>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% else %}
-                        <div class="alert danger">
-                            <p>Não existem lançamentos financeiros</p>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
     </div>
-</div>
-
-
-
 {% endblock %}

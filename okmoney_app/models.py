@@ -20,20 +20,20 @@ class MoneyReleases(models.Model):
     observation = models.TextField(max_length=200, null=True, blank=True)
 #    r = models.ForeignKey(reminders, on_delete=models.CASCADE, related_name='r')
 
+    class Meta:
+        ordering = ['id']
 
-class Meta:
-    ordering = ['id']
-
-
-def __str__(self):
-    return self.reason
+    def __str__(self):
+        return f' Data: {self.date}, Operação: {self.operation}, Valor: {self.value}'
 
 
 class reminders(models.Model):
-    lembrete = models.CharField('Lembrete', max_length=500, blank=True)
+    date = models.DateField()
+    lembrete = models.CharField('Lembrete', max_length=500, blank=False)
+    status = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.lembrete
+        return f' Lembrete: {self.lembrete}, Data: {self.date}'
 
 
 # registered_by = models.ForeignKey(User, on_delete=DO_NOTHING, related_name='registered_by')

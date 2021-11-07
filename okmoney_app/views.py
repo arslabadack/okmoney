@@ -22,14 +22,16 @@ class Index(View):
         total_out = models.MoneyReleases.objects.filter(
             operation='saida').aggregate(total=Sum('value')).get('total')
 
-        # TODO: implementar a lógica de validação
         if total_in == None and total_out == None:
             total_in = 0
             total_out = 0
             total_difference = 0
         elif total_in == None:
+            total_in = 0
+            total_difference = total_in - total_out
+        elif total_out == None:
             total_out = 0
-            total_difference = 0
+            total_difference = total_in - total_out
         else:
             total_difference = total_in - total_out
 
@@ -89,14 +91,15 @@ class MoneyReleases(View):
             'Lançamento financeiro registrado',
         )
 
-        return redirect('releases')
+        return redirect('index')
 
 
 class MoneyList(ListView):
-    template_name = 'money_releases.html'
+    template_name = 'money_list.html'
     context_object_name = 'money_list'
     paginate_by = 20
     model = models.MoneyReleases
+    ordering = ['-date']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -135,36 +138,36 @@ def error500(request):
     return HttpResponse(content=template.render(), content_type='text/html; charset=utf8', status=500)
 
 
-# class Login(View):
-#     def get(self, *args, **kwargs):
-#         return render(self.request, 'login.html')
+class Login(View):
+    def get(self, *args, **kwargs):
+        return render(self.request, 'login.html')
 
-#     def post(self, *args, **kwargs):
-#         '''
-#         username = self.request.POST.get('username')
-#         password = self.request.POST.get('password')
-#         user = authenticate(self.request, username=username, password=password)
-#         if not user:
+    def post(self, *args, **kwargs):
+        '''
+        username = self.request.POST.get('username')
+        password = self.request.POST.get('password')
+        user = authenticate(self.request, username=username, password=password)
+        if not user:
 
-#             messages.error(
-#                 self.request,
-#                 'CPF ou senha incorretos!',
-#             )
+            messages.error(
+                self.request,
+                'CPF ou senha incorretos!',
+            )
 
-#             return redirect('donations:login')
-#         else:
-#             login(self.request, user)
-#         next = self.request.GET.get('next')
-#         if next is None or next == '/':
-#             if tecnico.is_gestor:
-#                 return redirect('tecnicos:index_gestor')
-#             return redirect('tecnicos:index')
+            return redirect('donations:login')
+        else:
+            login(self.request, user)
+        next = self.request.GET.get('next')
+        if next is None or next == '/':
+            if tecnico.is_gestor:
+                return redirect('tecnicos:index_gestor')
+            return redirect('tecnicos:index')
 
-#         return redirect(self.request.GET.get('next'))
-#         '''
+        return redirect(self.request.GET.get('next'))
+        '''
 
 
-# class Logout(View):
-#     def get(self, *args, **kwargs):
-#         logout(self.request)
-#         return redirect(self.request.META.get('HTTP_REFERER'))
+class Logout(View):
+    def get(self, *args, **kwargs):
+        logout(self.request)
+        return redirect(self.request.META.get('HTTP_REFERER'))

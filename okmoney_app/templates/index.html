@@ -22,7 +22,7 @@
                         <div class="stat-widget-one">
                             <div class="stat-content">
                                 <div class="stat-text">Total Saídas Financeiras</div>
-                                <div class="stat-digit gradient-3-text">R$ {{ total_out }}</div>
+                                <div class="stat-digit gradient-9-text">R$ {{ total_out }}</div>
                             </div>
                         </div>
                     </div>
@@ -41,12 +41,17 @@
                     <div class="card">
                         <div class="stat-widget-one">
                             <div class="stat-content">
-                                <div class="stat-text">Análise de Caixa</div>
+                                <div class="stat-text">Ações</div>
                             </div>
                             <br>
                             <div class="d-inline-block">
                                 <a href="{% url 'releases' %}">
-                                    <button type="button" class="btn gradient-3 btn-lg border-0 btn-rounded px-5">Fluxo de
+                                    <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Lançamentos</button>
+                                </a>
+                            </div>
+                            <div class="d-inline-block">
+                                <a href="{% url 'list' %}">
+                                    <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Fluxo de
                                         Caixa</button>
                                 </a>
                             </div>
@@ -54,14 +59,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Sales</h4>
-                                <canvas id="sales-chart" width="500" height="250"></canvas>
-                            </div>
-                        </div>
+            <div class="col-lg-13">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Sales</h4>
+                        <canvas id="sales-chart" width="500" height="250"></canvas>
                     </div>
+                </div>
+            </div>
             <div class="col-lg-13 col-md-13">
                 <div class="card">
                     <div class="card-body px-0">
@@ -93,3 +98,97 @@
     </div>
 
 {% endblock %}
+<script>
+//Sales chart
+    var ctx = document.getElementById("sales-chart");
+    ctx.height = 150;
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Ago", "Set", "Out", "Nov", "Dez"],
+            type: 'line',
+            defaultFontFamily: 'Montserrat',
+            datasets: [{
+                label: "Clothes",
+                data: [0, 10, 20, 10, 25, 15, 150],
+                backgroundColor: 'transparent',
+                borderColor: '#7571F9',
+                borderWidth: 3,
+                pointStyle: 'circle',
+                pointRadius: 5,
+                pointBorderColor: 'transparent',
+                pointBackgroundColor: '#7571F9',
+
+            }, {
+                label: "Foods",
+                data: [0, 30, 10, 60, 50, 63, 10],
+                backgroundColor: 'transparent',
+                borderColor: '#4d7cff',
+                borderWidth: 3,
+                pointStyle: 'circle',
+                pointRadius: 5,
+                pointBorderColor: 'transparent',
+                pointBackgroundColor: '#4d7cff',
+            }, {
+                label: "Electronics",
+                data: [0, 50, 40, 20, 40, 79, 20],
+                backgroundColor: 'transparent',
+                borderColor: '#173e43',
+                borderWidth: 3,
+                pointStyle: 'circle',
+                pointRadius: 5,
+                pointBorderColor: 'transparent',
+                pointBackgroundColor: '#173e43',
+            }]
+        },
+        options: {
+            responsive: true,
+
+            tooltips: {
+                mode: 'index',
+                titleFontSize: 12,
+                titleFontColor: '#000',
+                bodyFontColor: '#000',
+                backgroundColor: '#fff',
+                titleFontFamily: 'Montserrat',
+                bodyFontFamily: 'Montserrat',
+                cornerRadius: 3,
+                intersect: false,
+            },
+            legend: {
+                labels: {
+                    usePointStyle: true,
+                    fontFamily: 'Montserrat',
+                },
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    gridLines: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    scaleLabel: {
+                        display: false,
+                        labelString: 'Month'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    gridLines: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Value'
+                    }
+                }]
+            },
+            title: {
+                display: false,
+                text: 'Normal Legend'
+            }
+        }
+    });
+</script>

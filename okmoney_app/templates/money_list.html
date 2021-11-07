@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="content-body">
+
+        {% block breadcrumb %}
+            <div class="row page-titles mx-0">
+                <div class="col p-md-0">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active"><a href="{% url 'index' %}">Home</a></li>
+                        <li class="breadcrumb-item">Fluxo de Caixa</li>
+                    </ol>
+                </div>
+            </div>
+        {% endblock %}
+
+        <div class="container-fluid mt-3">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">  
+                            <h4 class="card-title">Lançamentos Financeiros</h4> 
+                            {% if money_list %}
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered zero-configuration">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Data</th>
+                                                <th scope="col">Operação</th>
+                                                <th scope="col">Motivo</th>
+                                                <th scope="col">Local</th>
+                                                <th scope="col">Valor</th>
+                                                <th scope="col">Método de Pagamento</th>
+                                                <th scope="col">Observação</th>
+                                                <th scope="col">Ação</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for releases in money_list %}
+                                                <tr>
+                                                    <td>{{ releases.date }}</td>
+                                                    <td>{{ releases.operation }}</td>
+                                                    <td>{{ releases.reason }}</td>
+                                                    <td>{{ releases.place }}</td>
+                                                    <td>{{ releases.value }}</td>
+                                                    <td>{{ releases.payment_method }}</td>
+                                                    <td>{{ releases.observation }}</td>
+                                                    </td>
+                                                    <td>
+                                                        <span>
+                                                            <a href="#" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-pencil color-muted m-r-5"></i>
+                                                            </a>
+                                                            <a href="#" data-toggle="tooltip" data-placement="top" title="Close"><i class="fa fa-close color-muted"></i>
+                                                            </a>
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="alert danger">
+                                    <p>Não existem lançamentos financeiros</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="d-inline-block">
+                        <a href="{% url 'index' %}">
+                            <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Voltar</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

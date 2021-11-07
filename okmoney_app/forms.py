@@ -14,17 +14,18 @@ class MoneyForm(forms.ModelForm):
         input_formats=['%d/%m/%Y'],
         widget=forms.DateInput(
             attrs={
-                'class': 'mydatepicker',
+                'class': 'complex-colorpicker',
                 'placeholder': 'Data',
             }
         )
     )
 
     operation = forms.ChoiceField(
-        initial='Não informado',
+        initial='',
         required=True,
         label='Operação Financeira ',
         choices=[
+            ('', 'Selecione a Operação'),
             ('entrada', 'Entrada Financeira'),
             ('saida', 'Saída Financeira'),
         ],
@@ -53,10 +54,11 @@ class MoneyForm(forms.ModelForm):
     )
 
     payment_method = forms.ChoiceField(
-        initial='Não informado',
+        initial='',
         required=True,
         label='Método ',
         choices=[
+            ('', 'Selecione o Método'),
             ('dinheiro', 'Dinheiro'),
             ('card_d', 'Cartão de Débito'),
             ('card_c', 'Cartão de Crédito'),
@@ -89,36 +91,27 @@ class MoneyForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Div(
+                Column('reason', css_class='col-md-3'),
+                Column('operation', css_class='col-md-3'),
+                css_class='row'
+            ),
+            Div(
+                Column('place', css_class='col-md-3'),
                 Column('date', css_class='col-md-3'),
                 css_class='row'
             ),
             Div(
-                Column('operation', css_class='col-md-6'),
+                Column('value', css_class='col-md-3'),
+                Column('payment_method', css_class='col-md-3'),
                 css_class='row'
             ),
             Div(
-                Column('reason', css_class='col-md-8'),
-                css_class='row'
-            ),
-            Div(
-                Column('place', css_class='col-md-8'),
-                css_class='row'
-            ),
-            Div(
-                Column('value', css_class='col-md-4'),
-                css_class='row'
-            ),
-            Div(
-                Column('payment_method', css_class='col-md-6'),
-                css_class='row'
-            ),
-            Div(
-                Column('observation', css_class='col-md-11'),
+                Column('observation', css_class='col-md-6'),
                 css_class='row'
             ),
             ButtonHolder(
                 HTML(
-                    '<a class="btn mb-1 btn-rounded btn-warning" href="{% url "releases" %}" type="button">Cancelar</a>'
+                    '<a class="btn mb-1 btn-rounded btn-danger" href="{% url "index" %}" type="button">Cancelar</a>'
                 ),
                 Submit('submit', 'Salvar',
                        css_class='btn mb-1 btn-rounded btn-success'),
