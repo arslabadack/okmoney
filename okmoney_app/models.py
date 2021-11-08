@@ -41,16 +41,19 @@ class MoneyOut(models.Model):
         return f' Data: {self.date}, Operação: {self.operation}, Valor: {self.value}'
 
 
-class Reminders(models.Model):
-    date = models.DateField()
-    lembrete = models.CharField('Lembrete', max_length=500, blank=False)
+class Future(models.Model):
+    release_date = models.DateField()
+    receiving_date = models.DateField()
+    category = models.CharField(max_length=100, null=False, blank=False)
+    reason = models.CharField('Lembrete', max_length=500, blank=False)
+    value = models.DecimalField(decimal_places=2, max_digits=8)
     status = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['id']
 
     def __str__(self):
-        return f' Lembrete: {self.lembrete}, Data: {self.date}'
+        return f' Motivo: {self.reason}, Data de Recebimento: {self.receiving_date}'
 
 
 # registered_by = models.ForeignKey(User, on_delete=DO_NOTHING, related_name='registered_by')

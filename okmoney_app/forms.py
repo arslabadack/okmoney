@@ -205,3 +205,100 @@ class MoneyOutModelForm(forms.ModelForm):
                        css_class='btn mb-1 btn-rounded btn-success'),
             )
         )
+
+
+class FutureModelForm(forms.ModelForm):
+    release_date = forms.DateField(
+        required=True,
+        label='Data de Lançamento ',
+        input_formats=['%d/%m/%Y'],
+        widget=forms.DateInput(
+            attrs={
+                'class': 'complex-colorpicker',
+                'placeholder': 'Data de Lançamento',
+            }
+        )
+    )
+
+    receiving_date = forms.DateField(
+        required=True,
+        label='Data de Recebimento ',
+        input_formats=['%d/%m/%Y'],
+        widget=forms.DateInput(
+            attrs={
+                'class': 'complex-colorpicker',
+                'placeholder': 'Data de Recebimento',
+            }
+        )
+    )
+
+    category = forms.ChoiceField(
+        initial='',
+        required=True,
+        label='Operação ',
+        choices=[
+            ('', 'Selecione a Operação'),
+            ('entrada', 'Crédito (recebimento)'),
+            ('saida', 'Débito (dívida)'),
+        ],
+    )
+
+    reason = forms.CharField(
+        max_length=300,
+        required=True,
+        label='Motivo ',
+        widget=forms.TextInput(attrs={'placeholder': 'Motivo'}),
+    )
+
+    value = forms.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        required=True,
+        label='Valor (R$) ',
+        widget=forms.NumberInput(attrs={'placeholder': 'Valor'}),
+    )
+
+    status = forms.BooleanField(
+        required=False,
+        label='Pago ',
+        widget=forms.CheckboxInput(attrs={'placeholder': 'Pago'}),
+    )
+
+    class Meta:
+        model = models.Future
+        fields = ['release_date', 'receiving_date',
+                  'category', 'reason', 'value', 'status']
+
+    def clean(self, *args, **kwargs):
+        data = self.data
+        cleaned = self.cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super(FutureModelForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper(self)
+        self.helper.form_method = 'post'
+        self.helper.layout = Layout(
+            Div(
+                Column('release_date', css_class='col-md-3'),
+                Column('receiving_date', css_class='col-md-3'),
+                Column('category', css_class='col-md-3'),
+                css_class='row'
+            ),
+            Div(
+                Column('reason', css_class='col-md-6'),
+                Column('value', css_class='col-md-3'),
+                css_class='row'
+            ),
+            Div(
+                Column('status', css_class='col-md-3'),
+                css_class='row'
+            ),
+            ButtonHolder(
+                HTML(
+                    '<a class="btn mb-1 btn-rounded btn-danger" href="{% url "index" %}" type="button">Cancelar</a>'
+                ),
+                Submit('submit', 'Salvar',
+                       css_class='btn mb-1 btn-rounded btn-success'),
+            )
+        )

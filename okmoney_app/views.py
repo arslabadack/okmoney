@@ -1,5 +1,6 @@
 from . import forms
 from . import models
+from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
@@ -136,7 +137,7 @@ class MoneyOut(TemplateView):
         return redirect('index')
 
 
-class MoneyInList(ListView):
+class MoneyList(ListView):
     template_name = 'money_list.html'
     context_object_name = 'money_in_list'
     extra_context = {
@@ -145,23 +146,12 @@ class MoneyInList(ListView):
     paginate_by = 10
     model = models.MoneyIn
     extra_model = models.MoneyOut
-    ordering = ['-date']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         return context
 
-
-class MoneyOutList(ListView):
-    template_name = 'money_list.html'
-    context_object_name = 'money_out_list'
-    paginate_by = 10
-    model = models.MoneyOut
-    ordering = ['-date']
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+# TODO: implementar edição
 
 
 class MoneyEdit(TemplateView):
@@ -195,6 +185,44 @@ class MoneyEdit(TemplateView):
         messages.success(self.request, 'Doação atualizada com sucesso!')
 
         return redirect('money_list', pk=self.release.pk)
+
+
+class Future(TemplateView):
+    template_name = 'future.html'
+
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        context = {
+            'future_form': forms.FutureModelForm(
+                data=self.request.POST or None
+            ),
+        }
+
+        self.future_form = context['future_form']
+
+        self.render = render(self.request, self.template_name, context)
+
+    def get(self, *args, **kwargs):
+        return self.render
+
+    def post(self, *args, **kwargs):
+        if not self.future_form.is_valid():
+            return self.render
+
+        new_release = models.Future(
+            release_date=self.money_out_form.cleaned_data.get('release_date'),
+            receiving_date=self.money_out_form.cleaned_data.get(
+                'receiving_date'),
+            category=self.money_out_form.cleaned_data.get('reason'),
+            reason=self.money_out_form.cleaned_data.get('reason'),
+            value=self.money_out_form.cleaned_data.get('value'),
+            status=self.money_out_form.cleaned_data.get('status'),
+            # registered_by=self.request.user
+        )
+        new_release.save()
+
+        return redirect('future')
 
 
 def error404(request, exception):
