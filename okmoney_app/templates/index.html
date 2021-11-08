@@ -6,45 +6,8 @@
 {% block content %}
     <div class="content-body">
         <div class="container-fluid mt-3">
-            <div class="col-lg-13">
-                <div class="card">
-                    <div class="card-body">
-                        
-                    </div>
-                </div>
-            </div>
             <div class="row">
-                <div class="col-3">
-                    <div class="card">
-                        <div class="stat-widget-one">
-                            <div class="stat-content">
-                                <div class="stat-text">Total Entradas Financeiras</div>
-                                <div class="stat-digit gradient-3-text">R$ {{ total_in }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="card">
-                        <div class="stat-widget-one">
-                            <div class="stat-content">
-                                <div class="stat-text">Total Saídas Financeiras</div>
-                                <div class="stat-digit gradient-9-text">R$ {{ total_out }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="card">
-                        <div class="stat-widget-one">
-                            <div class="stat-content">
-                                <div class="stat-text">Total Saldo</div>
-                                <div class="stat-digit gradient-3-text">R$ {{ total_difference }}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-3">
+                <div class="col-6">
                     <div class="card">
                         <div class="stat-widget-one">
                             <div class="stat-content">
@@ -52,8 +15,13 @@
                             </div>
                             <br>
                             <div class="d-inline-block">
-                                <a href="{% url 'releases' %}">
-                                    <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Lançamentos</button>
+                                <a href="{% url 'moneyin' %}">
+                                    <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Novo Recebimento</button>
+                                </a>
+                            </div>
+                            <div class="d-inline-block">
+                                <a href="{% url 'moneyout' %}">
+                                    <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Novo Pagamento</button>
                                 </a>
                             </div>
                             <div class="d-inline-block">
@@ -61,6 +29,61 @@
                                     <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Fluxo de
                                         Caixa</button>
                                 </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-13">
+                        <div class="card">
+                            <div class="stat-widget-one">
+                                <div class="stat-content">
+                                    <div class="stat-text">Total Entradas Financeiras</div>
+                                    <div class="stat-digit gradient-3-text">R$ {{ total_in }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-13">
+                        <div class="card">
+                            <div class="stat-widget-one">
+                                <div class="stat-content">
+                                    <div class="stat-text">Total Saídas Financeiras</div>
+                                    <div class="stat-digit gradient-9-text">R$ {{ total_out }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-13">
+                        <div class="card">
+                            <div class="stat-widget-one">
+                                <div class="stat-content">
+                                    <div class="stat-text">Total Saldo</div>
+                                    <div class="stat-digit gradient-3-text">R$ {{ total_difference }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="col-13">
+                        <div class="card">
+                            <div class="stat-widget-one">
+                                <div class="stat-content">
+                                    <div class="row">
+                                        <div class="d-inline-block">
+                                            <a href="{% url 'moneyin' %}">
+                                                <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Novo Recebimento</button>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-13">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Pie chart</h4>
+                                <canvas id="pieChart"width="350" height="250"></canvas>
                             </div>
                         </div>
                     </div>
