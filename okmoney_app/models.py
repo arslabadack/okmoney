@@ -1,6 +1,6 @@
 from django.db import models
 # from django.db.models.deletion import DO_NOTHING
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 
 
 # class reminders(models.Model):

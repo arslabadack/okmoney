@@ -11,7 +11,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.db.models import Sum
 
 
-class Index(TemplateView):
+class Index(LoginRequiredMixin, TemplateView):
     template_name = 'index.html'
 
     def setup(self, *args, **kwargs):
@@ -62,7 +62,7 @@ class Index(TemplateView):
         pass
 
 
-class MoneyIn(TemplateView):
+class MoneyIn(LoginRequiredMixin, TemplateView):
     template_name = 'money_in.html'
 
     def setup(self, *args, **kwargs):
@@ -102,7 +102,7 @@ class MoneyIn(TemplateView):
         return redirect('index')
 
 
-class MoneyOut(TemplateView):
+class MoneyOut(LoginRequiredMixin, TemplateView):
     template_name = 'money_out.html'
 
     def setup(self, *args, **kwargs):
@@ -146,7 +146,7 @@ class MoneyOut(TemplateView):
         return redirect('index')
 
 
-class MoneyList(ListView):
+class MoneyList(LoginRequiredMixin, ListView):
     template_name = 'money_list.html'
     context_object_name = 'money_in_list'
     extra_context = {
@@ -163,7 +163,7 @@ class MoneyList(ListView):
 # TODO: implementar edição
 
 
-class MoneyEdit(TemplateView):
+class MoneyEdit(LoginRequiredMixin, TemplateView):
     template_name = 'money_edit.html'
 
     def setup(self, *args, **kwargs):
@@ -196,7 +196,7 @@ class MoneyEdit(TemplateView):
         return redirect('money_list', pk=self.release.pk)
 
 
-class Future(TemplateView):
+class Future(LoginRequiredMixin, TemplateView):
     template_name = 'future.html'
 
     def setup(self, *args, **kwargs):
@@ -233,7 +233,7 @@ class Future(TemplateView):
         return redirect('future')
 
 
-class FutureEdit(TemplateView):
+class FutureEdit(LoginRequiredMixin, TemplateView):
     template_name = 'future_edit.html'
 
     def setup(self, *args, **kwargs):
@@ -283,31 +283,26 @@ class Login(View):
         return render(self.request, 'login.html')
 
     def post(self, *args, **kwargs):
-        '''
+
         username = self.request.POST.get('username')
         password = self.request.POST.get('password')
-        user = authenticate(self.request, username=username, password=password)
-        if not user:
 
+        user = authenticate(self.request, username=username, password=password)
+
+        if not user:
             messages.error(
                 self.request,
-                'CPF ou senha incorretos!',
+                'Nome de usuário ou senha incorretos!',
             )
 
-            return redirect('donations:login')
+            return redirect('login')
         else:
             login(self.request, user)
-        next = self.request.GET.get('next')
-        if next is None or next == '/':
-            if tecnico.is_gestor:
-                return redirect('tecnicos:index_gestor')
-            return redirect('tecnicos:index')
 
-        return redirect(self.request.GET.get('next'))
-        '''
+        return redirect('index')
 
 
 class Logout(View):
     def get(self, *args, **kwargs):
         logout(self.request)
-        return redirect(self.request.META.get('HTTP_REFERER'))
+        return redirect('login')

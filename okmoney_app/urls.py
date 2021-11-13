@@ -2,6 +2,7 @@ from django.urls import path
 
 from . import views
 
+
 urlpatterns = [
     # inclua aqui as rotas
     path('', views.Index.as_view(), name='index'),

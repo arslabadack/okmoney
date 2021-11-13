@@ -35,7 +35,11 @@ INSTALLED_APPS = [
     'crispy_forms',
     'bootstrap4',
     'chartjs',
+    'blog.apps.BlogConfig',
+    'users.apps.UsersConfig',
 ]
+
+AUTH_USER_MODEL = 'users.CustomUser'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
@@ -96,6 +100,8 @@ LANGUAGE_CODE = 'pt-BR'
 
 TIME_ZONE = 'America/Sao_Paulo'
 
+TIME_INPUT_FORMATS = ('%d/%m/%Y', )
+
 USE_I18N = True
 
 USE_L10N = True
@@ -123,4 +129,5 @@ try:
 except ImportError:
     pass
 
+LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'login'

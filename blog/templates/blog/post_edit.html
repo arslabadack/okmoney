@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <div class="container-form">
+        <div class="form-add">
+        {% csrf_token %}
+        <p class="edit-p">Nova experiência</p>
+        {% crispy form %}
+        </div>
+    </div>
+    
+{% endblock %}
