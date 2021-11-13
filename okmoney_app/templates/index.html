@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
 {% block title %}OKMoney{% endblock %}
 
 {% block content %}
@@ -52,17 +53,33 @@
                             <div class="stat-widget-one">
                                 <div class="stat-content">
                                     <div class="stat-text">Total Saídas Financeiras</div>
-                                    <div class="stat-digit gradient-9-text">R$ {{ total_out }}</div>
+                                    <div class="stat-digit gradient-5-text">R$ {{ total_out }}</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-13">
-                        <div class="card">
-                            <div class="stat-widget-one">
-                                <div class="stat-content">
-                                    <div class="stat-text">Total Saldo</div>
-                                    <div class="stat-digit gradient-3-text">R$ {{ total_difference }}</div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="col-13">
+                                <div class="card">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-content">
+                                            <div class="stat-text">Créditos Futuros</div>
+                                            <div class="stat-digit gradient-3-text">R$ {{ total_in_future}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="col-13">
+                                <div class="card">
+                                    <div class="stat-widget-one">
+                                        <div class="stat-content">
+                                            <div class="stat-text">Débitos Futuros</div>
+                                            <div class="stat-digit gradient-5-text">R$ {{ total_out_future }}</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -75,46 +92,11 @@
                                 <div class="stat-content">
                                     <div class="row">
                                         <div class="d-inline-block">
-                                            <a href="{% url 'moneyin' %}">
+                                            <a href="{% url 'future_edit' %}">
                                                 <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Novo Recebimento</button>
                                             </a>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-13">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Pie chart</h4>
-                                <canvas id="pieChart"width="350" height="250"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-13">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Movimentações Financieras Mensais</h4>
-                        <canvas id="movements-chart" width="500" height="250"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-13 col-md-13">
-                <div class="card">
-                    <div class="card-body px-0">
-                        <h4 class="card-title px-4 mb-3">Todo</h4>
-                        <div class="todo-list">
-                            <div class="tdl-holder">
-                                <div class="tdl-content">
-                                    <ul id="todo_list">
-                                    </ul>
-                                </div>
-                                <div class="px-4">
-                                    <input type="text" class="tdl-new form-control"
-                                        placeholder="Write new item and hit 'Enter'...">
                                 </div>
                             </div>
                         </div>

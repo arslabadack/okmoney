@@ -258,16 +258,10 @@ class FutureModelForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={'placeholder': 'Valor'}),
     )
 
-    status = forms.BooleanField(
-        required=False,
-        label='Pago ',
-        widget=forms.CheckboxInput(attrs={'placeholder': 'Pago'}),
-    )
-
     class Meta:
         model = models.Future
         fields = ['release_date', 'receiving_date',
-                  'category', 'reason', 'value', 'status']
+                  'category', 'reason', 'value']
 
     def clean(self, *args, **kwargs):
         data = self.data
@@ -288,10 +282,6 @@ class FutureModelForm(forms.ModelForm):
             Div(
                 Column('reason', css_class='col-md-6'),
                 Column('value', css_class='col-md-3'),
-                css_class='row'
-            ),
-            Div(
-                Column('status', css_class='col-md-3'),
                 css_class='row'
             ),
             ButtonHolder(

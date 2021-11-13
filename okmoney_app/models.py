@@ -47,7 +47,6 @@ class Future(models.Model):
     category = models.CharField(max_length=100, null=False, blank=False)
     reason = models.CharField('Lembrete', max_length=500, blank=False)
     value = models.DecimalField(decimal_places=2, max_digits=8)
-    status = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['id']

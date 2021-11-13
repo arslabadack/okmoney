@@ -1,7 +1,8 @@
 asgiref==3.4.1
 beautifulsoup4==4.10.0
-Django==3.2.8
+Django==3.2.9
 django-bootstrap4==3.0.1
+django-chartjs==2.2.1
 django-crispy-forms==1.13.0
 mysql==0.0.3
 mysqlclient==2.0.3

@@ -16,3 +16,11 @@ class MoneyOutAdmin(admin.ModelAdmin):
 
 
 admin.site.register(MoneyOut, MoneyOutAdmin)
+
+
+class FutureAdmin(admin.ModelAdmin):
+    list_display = ('release_date', 'receiving_date',
+                    'category', 'reason', 'value')
+
+
+admin.site.register(Future, FutureAdmin)

@@ -1,6 +1,5 @@
 from . import forms
 from . import models
-from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
@@ -23,25 +22,35 @@ class Index(TemplateView):
         total_out = models.MoneyOut.objects.all().aggregate(Sum('value'))[
             'value__sum']
 
-#        total_out = models.MoneyOut.objects.filter(operation='saida').aggregate(total=Sum('value')).get('total')
+        total_in_future = models.Future.objects.filter(
+            category='entrada').aggregate(total=Sum('value')).get('total')
+        total_out_future = models.Future.objects.filter(
+            category='saida').aggregate(total=Sum('value')).get('total')
 
         if total_in == None and total_out == None:
             total_in = 0
             total_out = 0
-            total_difference = 0
         elif total_in == None:
             total_in = 0
-            total_difference = total_in - total_out
         elif total_out == None:
             total_out = 0
-            total_difference = total_in - total_out
-        else:
-            total_difference = total_in - total_out
+
+        if total_in_future == None and total_out_future == None:
+            total_in_future = 0
+            total_out_future = 0
+        elif total_in_future == None:
+            total_in_future = 0
+        elif total_out_future == None:
+            total_out_future = 0
 
         context = {
             'total_in': total_in,
             'total_out': total_out,
-            'total_difference': total_difference,
+
+            'total_in_future': total_in_future,
+            'total_out_future': total_out_future,
+
+            'future_releases': models.Future.objects.all()
         }
 
         self.render = render(self.request, self.template_name, context)
@@ -161,7 +170,7 @@ class MoneyEdit(TemplateView):
         super().setup(*args, **kwargs)
 
         self.release = get_object_or_404(
-            models.MoneyReleases, pk=self.kwargs.get('pk'))
+            models.MoneyIn, pk=self.kwargs.get('pk'))
 
         context = {
             'relese': self.release,
@@ -211,18 +220,50 @@ class Future(TemplateView):
             return self.render
 
         new_release = models.Future(
-            release_date=self.money_out_form.cleaned_data.get('release_date'),
-            receiving_date=self.money_out_form.cleaned_data.get(
+            release_date=self.future_form.cleaned_data.get('release_date'),
+            receiving_date=self.future_form.cleaned_data.get(
                 'receiving_date'),
-            category=self.money_out_form.cleaned_data.get('reason'),
-            reason=self.money_out_form.cleaned_data.get('reason'),
-            value=self.money_out_form.cleaned_data.get('value'),
-            status=self.money_out_form.cleaned_data.get('status'),
+            category=self.future_form.cleaned_data.get('category'),
+            reason=self.future_form.cleaned_data.get('reason'),
+            value=self.future_form.cleaned_data.get('value'),
             # registered_by=self.request.user
         )
         new_release.save()
 
         return redirect('future')
+
+
+class FutureEdit(TemplateView):
+    template_name = 'future_edit.html'
+
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        self.release = get_object_or_404(
+            models.Future, pk=self.kwargs.get('pk'))
+
+        context = {
+            'release': self.release,
+            'future_form': forms.FutureModelForm(
+                data=self.request.POST or None,
+                instance=self.release,
+            ),
+        }
+
+        self.future_form = context['future_form']
+        self.render = render(self.request, self.template_name, context)
+
+    def get(self, *args, **kwargs):
+        return self.render
+
+    def post(self, *args, **kwargs):
+        if not self.future_form.is_valid():
+            return self.render
+
+        self.release.save()
+        messages.success(self.request, 'Lançamento editado')
+
+        return redirect('future', pk=self.release.pk)
 
 
 def error404(request, exception):

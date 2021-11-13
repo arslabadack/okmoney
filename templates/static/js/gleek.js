@@ -6,7 +6,7 @@
         version: "light", //2 options "light" and "dark"
         layout: "horizontal", //2 options, "vertical" and "horizontal"
         navheaderBg: "color_2", //have 10 options, "color_1" to "color_10"
-        headerBg: "color_8", //have 10 options, "color_1" to "color_10"
+        headerBg: "color_2", //have 10 options, "color_1" to "color_10"
         sidebarStyle: "vertical", //defines how sidebar should look like, options are: "full", "compact", "mini" and "overlay". If layout is "horizontal", sidebarStyle won't take "overlay" argument anymore, this will turn into "full" automatically!
         //sidebarBg: "color_2", //have 10 options, "color_1" to "color_10"
         sidebarPosition: "fixed", //have two options, "static" and "fixed"
