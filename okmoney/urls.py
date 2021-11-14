@@ -18,12 +18,14 @@ from django.urls import path, include
 from django.conf.urls import handler404, handler500
 from okmoney_app import views
 
+
 urlpatterns = [
     path('accounts/login/', views.Login.as_view(), name='login'),
-    # path('accounts/logout/', views.Logout.as_view(), name='logout'),
+    path('accounts/logout/', views.Logout.as_view(), name='logout'),
     path('admin/', admin.site.urls),
     path('', include('okmoney_app.urls')),
     path('blog/', include('blog.urls')),
+    path('users/', include('users.urls')),
 ]
 
 handler404 = views.error404

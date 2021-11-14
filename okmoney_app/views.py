@@ -102,6 +102,39 @@ class MoneyIn(LoginRequiredMixin, TemplateView):
         return redirect('index')
 
 
+class MoneyInEdit(LoginRequiredMixin, TemplateView):
+    template_name = 'money_in.html'
+
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        self.release = get_object_or_404(
+            models.MoneyIn, pk=self.kwargs.get('pk'))
+
+        context = {
+            'relese': self.release,
+            'money_in_form': forms.MoneyInModelForm(
+                data=self.request.POST or None,
+                instance=self.release,
+            ),
+        }
+
+        self.money_in_form = context['money_in_form']
+        self.render = render(self.request, self.template_name, context)
+
+    def get(self, *args, **kwargs):
+        return self.render
+
+    def post(self, *args, **kwargs):
+        if not self.money_in_form.is_valid():
+            return self.render
+
+        self.release.save()
+        messages.success(self.request, 'Lançamento atualizado')
+
+        return redirect('money_list', pk=self.release.pk)
+
+
 class MoneyOut(LoginRequiredMixin, TemplateView):
     template_name = 'money_out.html'
 
@@ -149,51 +182,17 @@ class MoneyOut(LoginRequiredMixin, TemplateView):
 class MoneyList(LoginRequiredMixin, ListView):
     template_name = 'money_list.html'
     context_object_name = 'money_in_list'
-    extra_context = {
-        'money_out_list': models.MoneyOut.objects.all(),
-    }
+    # extra_context = {
+    #     'money_out_list': models.MoneyOut.objects.all(),
+    # }
     paginate_by = 10
     model = models.MoneyIn
-    extra_model = models.MoneyOut
+    # extra_model = models.MoneyOut
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['money_out_list'] = models.MoneyOut.objects.all()
         return context
-
-# TODO: implementar edição
-
-
-class MoneyEdit(LoginRequiredMixin, TemplateView):
-    template_name = 'money_edit.html'
-
-    def setup(self, *args, **kwargs):
-        super().setup(*args, **kwargs)
-
-        self.release = get_object_or_404(
-            models.MoneyIn, pk=self.kwargs.get('pk'))
-
-        context = {
-            'relese': self.release,
-            'money_form': forms.MoneyForm(
-                data=self.request.POST or None,
-                instance=self.release,
-            ),
-        }
-
-        self.money_form = context['money_form']
-        self.render = render(self.request, self.template_name, context)
-
-    def get(self, *args, **kwargs):
-        return self.render
-
-    def post(self, *args, **kwargs):
-        if not self.money_form.is_valid():
-            return self.render
-
-        self.release.save()
-        messages.success(self.request, 'Doação atualizada com sucesso!')
-
-        return redirect('money_list', pk=self.release.pk)
 
 
 class Future(LoginRequiredMixin, TemplateView):
@@ -206,6 +205,7 @@ class Future(LoginRequiredMixin, TemplateView):
             'future_form': forms.FutureModelForm(
                 data=self.request.POST or None
             ),
+            'future_releases': models.Future.objects.all(),
         }
 
         self.future_form = context['future_form']
@@ -226,7 +226,6 @@ class Future(LoginRequiredMixin, TemplateView):
             category=self.future_form.cleaned_data.get('category'),
             reason=self.future_form.cleaned_data.get('reason'),
             value=self.future_form.cleaned_data.get('value'),
-            # registered_by=self.request.user
         )
         new_release.save()
 
@@ -274,8 +273,6 @@ def error404(request, exception):
 def error500(request):
     template = loader.get_template('500.html')
     return HttpResponse(content=template.render(), content_type='text/html; charset=utf8', status=500)
-
-# TODO: criar login e logout
 
 
 class Login(View):
