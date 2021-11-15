@@ -3,124 +3,42 @@
 
 {% block content %}
     <div class="content-body">
+        <div class="row page-titles mx-0">
+            <div class="col p-md-0">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active"><a href="{% url 'blog:post_list' %}">Post List</a></li>
+                    <li class="breadcrumb-item">Post</li>
+                </ol>
+            </div>
+        </div>
         <div class="container-fluid mt-3">
-            <div class="card">
-                <p class="edit-p">Blog de Experiências</p>
-                {% if user.is_authenticated %}
-                    <a class="top-addpost" href="{% url 'blog:post_new' %}"><span class="fa fa-share-alt" aria-hidden="true"> Novo Post</span></a>
+            <div class='row'>
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">    
+                            {% for post in posts %}
+                                <div class="date">
+                                    {{ post.published_date }}
+                                </div>
+                                <div class="top-post">
+                                    <h2><a class="top-h1" href="{% url 'blog:post_detail' pk=post.pk %}"> {{ post.title }}</a></h2>
+                                    <p>{{ post.text|linebreaksbr }}</p>
+                                    <a class="top-comentario" href="{% url 'blog:post_detail' pk=post.pk %}">Comentários: {{ post.approved_comments.count }}</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if user.is_authenticated %}
+                    <div class="d-inline-block">
+                        <a href="{% url 'blog:post_new' %}">
+                            <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Novo Post</button>
+                        </a>
+                    </div>
                 {% endif %}
-                {% for post in posts %}
-                    <div class="date">
-                        {{ post.published_date }}
-                    </div>
-                    <div class="top-post">
-                        <h1><a class="top-h1" href="{% url 'blog:post_detail' pk=post.pk %}"> {{ post.title }}</a></h1>
-                        <p>{{ post.text|linebreaksbr }}</p>
-                        <a class="top-comentario" href="{% url 'blog:post_detail' pk=post.pk %}">Comentários: {{ post.approved_comments.count }}</a>
-                    </div>
-                {% endfor %}
             </div>
         </div>
     </div>
 
-    <div class="content-body">
-        <div class="container-fluid mt-3">
-            <div class="row">
-                <div class="col-6">
-                    <div class="card">
-                        <div class="stat-widget-one">
-                            <div class="stat-content">
-                                <div class="stat-text">Ações</div>
-                            </div>
-                            <br>
-                            <div class="d-inline-block">
-                                <a href="{% url 'moneyin' %}">
-                                    <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Novo Recebimento</button>
-                                </a>
-                            </div>
-                            <div class="d-inline-block">
-                                <a href="{% url 'moneyout' %}">
-                                    <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Novo Pagamento</button>
-                                </a>
-                            </div>
-                            <div class="d-inline-block">
-                                <a href="{% url 'future' %}">
-                                    <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Movimentações Futuras</button>
-                                </a>
-                            </div>
-                            <div class="d-inline-block">
-                                <a href="{% url 'list' %}">
-                                    <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Fluxo de
-                                        Caixa</button>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-13">
-                        <div class="card">
-                            <div class="stat-widget-one">
-                                <div class="stat-content">
-                                    <div class="stat-text">Total Entradas Financeiras</div>
-                                    <div class="stat-digit gradient-3-text">R$ {{ total_in }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-13">
-                        <div class="card">
-                            <div class="stat-widget-one">
-                                <div class="stat-content">
-                                    <div class="stat-text">Total Saídas Financeiras</div>
-                                    <div class="stat-digit gradient-5-text">R$ {{ total_out }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="col-13">
-                                <div class="card">
-                                    <div class="stat-widget-one">
-                                        <div class="stat-content">
-                                            <div class="stat-text">Créditos Futuros</div>
-                                            <div class="stat-digit gradient-3-text">R$ {{ total_in_future}}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="col-13">
-                                <div class="card">
-                                    <div class="stat-widget-one">
-                                        <div class="stat-content">
-                                            <div class="stat-text">Débitos Futuros</div>
-                                            <div class="stat-digit gradient-5-text">R$ {{ total_out_future }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="col-13">
-                        <div class="card">
-                            <div class="stat-widget-one">
-                                <div class="stat-content">
-                                    <div class="row">
-                                        <div class="d-inline-block">
-                                            <a href="#">
-                                                <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Novo Recebimento</button>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock content %}

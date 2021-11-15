@@ -6,99 +6,99 @@
             <div class="col p-md-0">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item active"><a href="{% url 'blog:post_list' %}">Post List</a></li>
-                    <li class="breadcrumb-item"><a href="javascript:void(0)">Post Detail</a></li>
+                    <li class="breadcrumb-item"><a href="javascript:void(0)">Detalhes do Post</a></li>
                 </ol>
             </div>
         </div>
         <div class="container-fluid mt-3">
             <div class="row">
-                <div class="col-12">
+                <div class="col-9">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row">
-                                {% if post.published_date %}
-                                    <div class="date">
-                                        {{ post.published_date }}
-                                    </div>
-                                {% else %}
-                                    {% if user.is_authenticated %}
-                                        <a class="detail-btncomentar btn-publicar" href="{% url 'blog:post_publish' pk=post.pk %}">Publicar postagem</a>
-                                    {% endif %}
-                                {% endif %}
-
-                                &nbsp; | &nbsp;
+                            {% if post.published_date %}
+                                <div class="date">
+                                    {{ post.published_date }}
+                                </div>
+                            {% else %}
                                 {% if user.is_authenticated %}
-                                    <a class="fa fa-times" aria-hidden="true" href="{% url 'blog:post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-                                    <a class="fa fa-pencil-square-o" aria-hidden="true" href="{% url 'blog:post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                                    <a class="detail-btncomentar btn-publicar"
+                                    href="{% url 'blog:post_publish' pk=post.pk %}">Publicar postagem</a>
                                 {% endif %}
-                            </div>
+                            {% endif %}
+                            {% if user.is_authenticated %}
+                                <a class="fa fa-times" aria-hidden="true"
+                                    href="{% url 'blog:post_remove' pk=post.pk %}"><span
+                                        class="glyphicon glyphicon-remove"></span></a>
+                                <a class="fa fa-pencil-square-o" aria-hidden="true"
+                                    href="{% url 'blog:post_edit' pk=post.pk %}"><span
+                                        class="glyphicon glyphicon-pencil"></span></a>
+                            {% endif %}
 
-                                <h1>{{ post.title }}</h1>
-                                <p>{{ post.text|linebreaksbr }}</p>      
+                            <h3>{{ post.title }}</h3>
+                            <p>{{ post.text|linebreaksbr }}</p>
 
-                                <div class="post-like">
-                                    
-                                    <a href="{% url 'blog:post_like' pk=post.pk %}">
-                                        {% if liked %}
-                                            <span class="fa fa-thumbs-o-up liked"></span>
-                                        {% else %}
-                                            <span class="fa fa-thumbs-o-up"></span>
-                                        {% endif %}
-                                    </a> 
+                            <div class="post-like">
 
-                                    {{ post.likes_count }} &nbsp; | &nbsp;
-
-                                    <a href="{% url 'blog:post_dislike' pk=post.pk %}">
-                                        {% if disliked %}
-                                            <span class="fa fa-thumbs-o-down disliked"></span>
-                                        {% else %}
-                                            <span class="fa fa-thumbs-o-down"></span>
-                                        {% endif %}
-                                    </a> 
-
-                                    {{ post.dislikes_count }} &nbsp; | &nbsp;
-
-                                    {{ post.views }} Visualizações 
-
-                                </div>
-                                    <p>Índice de aprovação:</p>
-
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
-                                        aria-valuenow="{{ percent_likes|floatformat:1 }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ percent_likes|floatformat:0 }}%">
-                                        {{ percent_likes|floatformat:1 }}%
-                                        </div>
-                                    </div> 
-
-                                    <p>Índice de reprovação:</p>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar"
-                                        aria-valuenow="{{ percent_dislikes|floatformat:1 }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ percent_dislikes|floatformat:0 }}%">
-                                        {{ percent_dislikes|floatformat:1 }}%
-                                        </div>
-                                    </div> 
-                                </div>
-
-                                <a class="detail-btncomentar" href="{% url 'blog:add_comment_to_post' pk=post.pk %}">Adicionar comentários</a>
-                                {% for comment in post.comments.all %}
-                                    {% if user.is_authenticated or comment.approved_comment %}
-                                    <div>
-                                        <div class="date">{{ comment.created_date }}</div>
-
-                                        {% if not comment.approved_comment %}
-                                            <a class="fa fa-times-circle right" aria-hidden="true" href="{% url 'blog:comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-                                            <a class="fa fa-check-circle-o right" aria-hidden="true" href="{% url 'blog:comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
-                                        {% endif %}
-
-                                        <h4>{{ comment.author }}</h4>
-                                        <p>{{ comment.text|linebreaks }}</p>
-                                    </div>
+                                <a href="{% url 'blog:post_like' pk=post.pk %}">
+                                    {% if liked %}
+                                    <span class="fa fa-thumbs-o-up liked"></span>
+                                    {% else %}
+                                    <span class="fa fa-thumbs-o-up"></span>
                                     {% endif %}
-                                {% empty %}
-                                    <p class="comentario-zero">Nenhum comentário ainda :(</p>
-                                {% endfor %}
+                                </a>
+
+                                {{ post.likes_count }} &nbsp; | &nbsp;
+
+                                <a href="{% url 'blog:post_dislike' pk=post.pk %}">
+                                    {% if disliked %}
+                                    <span class="fa fa-thumbs-o-down disliked"></span>
+                                    {% else %}
+                                    <span class="fa fa-thumbs-o-down"></span>
+                                    {% endif %}
+                                </a>
+
+                                {{ post.dislikes_count }} &nbsp; | &nbsp;
+
+                                {{ post.views }} Visualizações
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-9">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Comentários</h4>
+                            {% for comment in post.comments.all %}
+                            {% if user.is_authenticated or comment.approved_comment %}
+                            <div class="date">{{ comment.created_date }}
+                            </div>
+                            <div>
+                                {% if not comment.approved_comment %}
+                                <a class="fa fa-times-circle right" aria-hidden="true"
+                                    href="{% url 'blog:comment_remove' pk=comment.pk %}"><span
+                                        class="glyphicon glyphicon-remove"></span></a>
+                                <a class="fa fa-check-circle-o right" aria-hidden="true"
+                                    href="{% url 'blog:comment_approve' pk=comment.pk %}"><span
+                                        class="glyphicon glyphicon-ok"></span></a>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <h4>{{ comment.author }}</h4>
+                                <p>{{ comment.text|linebreaks }}</p>
+                            </div>
+                            {% endif %}
+                            {% empty %}
+                            <p class="comentario-zero">Nenhum comentário ainda :(</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="d-inline-block">
+                        <a href="{% url 'blog:add_comment_to_post' pk=post.pk %}">
+                            <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-3">Adicionar
+                                comentários</button>
+                        </a>
                     </div>
                 </div>
             </div>

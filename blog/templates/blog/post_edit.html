@@ -4,11 +4,26 @@
 
 {% block content %}
 
-    <div class="container-form">
-        <div class="form-add">
-        {% csrf_token %}
-        <p class="edit-p">Nova experiência</p>
-        {% crispy form %}
+    <div class="content-body">
+        <div class="row page-titles mx-0">
+            <div class="col p-md-0">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active"><a href="{% url 'blog:post_list' %}">Post List</a></li>
+                    <li class="breadcrumb-item">Post</li>
+                </ol>
+            </div>
+        </div>
+        <div class="container-fluid mt-3">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                        <h4 class="card-title">Post</h4>
+                            {% crispy form %}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     

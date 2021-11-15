@@ -1,11 +1,12 @@
 from django.db import models
-from django.contrib.auth.models import User
-from users.models import CustomUser
+from django.contrib.auth import get_user_model
+from users.models import *
 from django.conf import settings
+from django.contrib.auth.models import User
 
 
 class MoneyIn(models.Model):
-    # author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
+    # author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name='Autor', on_delete=models.CASCADE)
     date = models.DateField()
     category = models.CharField(max_length=100, null=False, blank=False)
     value = models.DecimalField(decimal_places=2, max_digits=8)
@@ -19,7 +20,7 @@ class MoneyIn(models.Model):
 
 
 class MoneyOut(models.Model):
-    # author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # author = models.ForeignKey(get_user_model(), verbose_name='Autor', on_delete=models.CASCADE)
     date = models.DateField()
     date = models.DateField()
     category = models.CharField(max_length=100, null=False, blank=False)
