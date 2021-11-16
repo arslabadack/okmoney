@@ -129,5 +129,6 @@ try:
 except ImportError:
     pass
 
+LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'login'

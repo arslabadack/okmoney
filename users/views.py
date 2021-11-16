@@ -10,7 +10,7 @@ from django.contrib.auth import authenticate, login, logout
 class Register(generic.CreateView):
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('login')
-    template_name = 'templates/register.html'
+    template_name = 'register.html'
 
 
 class Login(View):
@@ -30,7 +30,7 @@ class Login(View):
                 'Nome de usuário ou senha incorretos!',
             )
 
-            return redirect('templates/login')
+            return redirect('users:login')
         else:
             login(self.request, user)
 
@@ -40,4 +40,4 @@ class Login(View):
 class Logout(View):
     def get(self, *args, **kwargs):
         logout(self.request)
-        return redirect('templates/login')
+        return redirect('users:login')

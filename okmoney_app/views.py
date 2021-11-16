@@ -53,7 +53,8 @@ class Index(LoginRequiredMixin, TemplateView):
             'future_releases': models.Future.objects.all()
         }
 
-        self.render = render(self.request, self.template_name, context)
+        self.render = render(
+            self.request, self.template_name, context)
 
     def get(self, *args, **kwargs):
         return self.render
@@ -86,12 +87,13 @@ class MoneyIn(LoginRequiredMixin, TemplateView):
             return self.render
 
         new_money_in = models.MoneyIn(
+            author=self.request.user,
             date=self.money_in_form.cleaned_data.get('date'),
             category=self.money_in_form.cleaned_data.get('category'),
             value=self.money_in_form.cleaned_data.get('value'),
             observation=self.money_in_form.cleaned_data.get('observation'),
-            # registered_by=self.request.user
         )
+
         new_money_in.save()
 
         messages.success(
@@ -159,6 +161,7 @@ class MoneyOut(LoginRequiredMixin, TemplateView):
             return self.render
 
         new_money_out = models.MoneyOut(
+            author=self.request.user,
             date=self.money_out_form.cleaned_data.get('date'),
             category=self.money_out_form.cleaned_data.get('category'),
             reason=self.money_out_form.cleaned_data.get('reason'),
@@ -179,15 +182,44 @@ class MoneyOut(LoginRequiredMixin, TemplateView):
         return redirect('index')
 
 
+class MoneyOutEdit(LoginRequiredMixin, TemplateView):
+    template_name = 'money_out.html'
+
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        self.release = get_object_or_404(
+            models.MoneyOut, pk=self.kwargs.get('pk'))
+
+        context = {
+            'relese': self.release,
+            'money_out_form': forms.MoneyOutModelForm(
+                data=self.request.POST or None,
+                instance=self.release,
+            ),
+        }
+
+        self.money_out_form = context['money_out_form']
+        self.render = render(self.request, self.template_name, context)
+
+    def get(self, *args, **kwargs):
+        return self.render
+
+    def post(self, *args, **kwargs):
+        if not self.money_out_form.is_valid():
+            return self.render
+
+        self.release.save()
+        messages.success(self.request, 'Lançamento atualizado')
+
+        return redirect('money_list', pk=self.release.pk)
+
+
 class MoneyList(LoginRequiredMixin, ListView):
     template_name = 'money_list.html'
     context_object_name = 'money_in_list'
-    # extra_context = {
-    #     'money_out_list': models.MoneyOut.objects.all(),
-    # }
     paginate_by = 10
     model = models.MoneyIn
-    # extra_model = models.MoneyOut
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -220,6 +252,7 @@ class Future(LoginRequiredMixin, TemplateView):
             return self.render
 
         new_release = models.Future(
+            author=self.request.user,
             release_date=self.future_form.cleaned_data.get('release_date'),
             receiving_date=self.future_form.cleaned_data.get(
                 'receiving_date'),
@@ -233,7 +266,7 @@ class Future(LoginRequiredMixin, TemplateView):
 
 
 class FutureEdit(LoginRequiredMixin, TemplateView):
-    template_name = 'future_edit.html'
+    template_name = 'future.html'
 
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
@@ -275,31 +308,31 @@ def error500(request):
     return HttpResponse(content=template.render(), content_type='text/html; charset=utf8', status=500)
 
 
-class Login(View):
-    def get(self, *args, **kwargs):
-        return render(self.request, 'login.html')
+# class Login(View):
+#     def get(self, *args, **kwargs):
+#         return render(self.request, 'login.html')
 
-    def post(self, *args, **kwargs):
+#     def post(self, *args, **kwargs):
 
-        username = self.request.POST.get('username')
-        password = self.request.POST.get('password')
+#         username = self.request.POST.get('username')
+#         password = self.request.POST.get('password')
 
-        user = authenticate(self.request, username=username, password=password)
+#         user = authenticate(self.request, username=username, password=password)
 
-        if not user:
-            messages.error(
-                self.request,
-                'Nome de usuário ou senha incorretos!',
-            )
+#         if not user:
+#             messages.error(
+#                 self.request,
+#                 'Nome de usuário ou senha incorretos!',
+#             )
 
-            return redirect('login')
-        else:
-            login(self.request, user)
+#             return redirect('login')
+#         else:
+#             login(self.request, user)
 
-        return redirect('index')
+#         return redirect('index')
 
 
-class Logout(View):
-    def get(self, *args, **kwargs):
-        logout(self.request)
-        return redirect('login')
+# class Logout(View):
+#     def get(self, *args, **kwargs):
+#         logout(self.request)
+#         return redirect('login')

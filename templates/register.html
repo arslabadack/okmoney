@@ -1,7 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html class="h-100" lang="en">
+<html class="h-100" lang="pt-br">
 
     <head>
         {% include 'partial/_head.html' %} 
@@ -45,7 +45,7 @@
                                         </div>
                                         <button class="btn login-form__btn submit w-100">Cadastrar</button>
                                     </form>
-                                        <p class="mt-5 login-form__footer">Possui conta?<a href="login.html" class="text-primary">Entre </a> no sistema agora/p>
+                                        <p class="mt-5 login-form__footer">Possui conta?<a href="{% url 'users:login' %}" class="text-primary"> Entre </a> no sistema agora</p>
                                         </p>
                                     </div>
                                 </div>
