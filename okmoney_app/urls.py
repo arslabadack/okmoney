@@ -11,5 +11,5 @@ urlpatterns = [
     path('money_out/<int:pk>', views.MoneyOutEdit.as_view(), name='money_out_edit'),
     path('money_list/', views.MoneyList.as_view(), name='list'),
     path('future/', views.Future.as_view(), name='future'),
-    path('future/<int:pk>', views.FutureEdit.as_view(), name='future_edit'),
+    path('future_edit/<int:pk>', views.FutureEdit.as_view(), name='future_edit'),
 ]

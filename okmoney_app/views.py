@@ -266,7 +266,7 @@ class Future(LoginRequiredMixin, TemplateView):
 
 
 class FutureEdit(LoginRequiredMixin, TemplateView):
-    template_name = 'future.html'
+    template_name = 'future_edit.html'
 
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
