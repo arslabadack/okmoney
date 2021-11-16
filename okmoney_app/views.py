@@ -134,7 +134,20 @@ class MoneyInEdit(LoginRequiredMixin, TemplateView):
         self.release.save()
         messages.success(self.request, 'Lançamento atualizado')
 
-        return redirect('money_list', pk=self.release.pk)
+        return redirect('list')
+
+
+class MoneyInDelete(LoginRequiredMixin, TemplateView):
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        self.money_in_object = get_object_or_404(
+            models.MoneyIn, pk=self.kwargs.get('pk'))
+
+        self.money_in_object.delete()
+
+    def get(self, *args, **kwargs):
+        return redirect('list')
 
 
 class MoneyOut(LoginRequiredMixin, TemplateView):
@@ -212,7 +225,20 @@ class MoneyOutEdit(LoginRequiredMixin, TemplateView):
         self.release.save()
         messages.success(self.request, 'Lançamento atualizado')
 
-        return redirect('money_list', pk=self.release.pk)
+        return redirect('list')
+
+
+class MoneyOutDelete(LoginRequiredMixin, TemplateView):
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        self.money_out_object = get_object_or_404(
+            models.MoneyOut, pk=self.kwargs.get('pk'))
+
+        self.money_out_object.delete()
+
+    def get(self, *args, **kwargs):
+        return redirect('list')
 
 
 class MoneyList(LoginRequiredMixin, ListView):
@@ -295,44 +321,22 @@ class FutureEdit(LoginRequiredMixin, TemplateView):
         self.release.save()
         messages.success(self.request, 'Lançamento editado')
 
-        return redirect('future', pk=self.release.pk)
+        return redirect('future')
+
+
+class FutureDelete(LoginRequiredMixin, TemplateView):
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        self.future_object = get_object_or_404(
+            models.Future, pk=self.kwargs.get('pk'))
+
+        self.future_object.delete()
+
+    def get(self, *args, **kwargs):
+        return redirect('future')
 
 
 def error404(request, exception):
     template = loader.get_template('404.html')
     return HttpResponse(content=template.render(), content_type='text/html; charset=utf8', status=404)
-
-
-def error500(request):
-    template = loader.get_template('500.html')
-    return HttpResponse(content=template.render(), content_type='text/html; charset=utf8', status=500)
-
-
-# class Login(View):
-#     def get(self, *args, **kwargs):
-#         return render(self.request, 'login.html')
-
-#     def post(self, *args, **kwargs):
-
-#         username = self.request.POST.get('username')
-#         password = self.request.POST.get('password')
-
-#         user = authenticate(self.request, username=username, password=password)
-
-#         if not user:
-#             messages.error(
-#                 self.request,
-#                 'Nome de usuário ou senha incorretos!',
-#             )
-
-#             return redirect('login')
-#         else:
-#             login(self.request, user)
-
-#         return redirect('index')
-
-
-# class Logout(View):
-#     def get(self, *args, **kwargs):
-#         logout(self.request)
-#         return redirect('login')

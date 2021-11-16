@@ -28,4 +28,3 @@ urlpatterns = [
 ]
 
 handler404 = views.error404
-handler500 = views.error500

@@ -42,7 +42,7 @@
                                                         <span>
                                                             <a href="{% url 'money_in_edit' entries.pk %}" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fa fa-pencil color-muted m-r-5"></i>
                                                             </a>
-                                                            <a href="#" data-toggle="tooltip" data-placement="top" title="Close"><i class="fa fa-close color-muted"></i>
+                                                            <a href="{% url 'money_in_delete' entries.pk %}" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-close color-muted"></i>
                                                             </a>
                                                         </span>
                                                     </td>
@@ -95,7 +95,7 @@
                                                         <span>
                                                             <a href="{% url 'money_out_edit' outputs.pk %}" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fa fa-pencil color-muted m-r-5"></i>
                                                             </a>
-                                                            <a href="#" data-toggle="tooltip" data-placement="top" title="Close"><i class="fa fa-close color-muted"></i>
+                                                            <a href="{% url 'money_out_delete' outputs.pk %}" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-close color-muted"></i>
                                                             </a>
                                                         </span>
                                                     </td>
