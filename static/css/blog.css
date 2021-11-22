@@ -1,0 +1,211 @@
+@import 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap';
+
+:root {
+    --gray: #BDBDBD;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-family: 'Roboto', sans-serif;
+}
+
+.fa {
+    font-size: 26;
+}
+
+.fa-thumbs-o-up,
+.fa-thumbs-o-down {
+    color: var(--gray);
+}
+
+.fa-times {
+    color: #dc1a28;
+    float: right;
+    margin: 8px 10px;
+}
+
+.fa-times-circle {
+    color: #dc1a28;
+    margin-left: 10px;
+}
+
+.fa-check-circle-o {
+    color: rgb(4, 245, 77);
+}
+
+.fa-pencil-square-o {
+    color: #007bff;
+    float: right;
+    margin: 10px 0px;
+}
+
+.bolder {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.fa-share-alt {
+    font-size: 20px;
+    color: #1B1B1B;
+}
+
+.fa-times:hover,
+.fa-times-circle:hover,
+.fa-check-circle-o:hover,
+.fa-pencil-square-o:hover,
+.fa-share-alt:hover {
+    color: #FF385C;
+    text-decoration: none;
+}
+
+
+.liked {
+    color: rgb(4, 245, 77);
+}
+
+.disliked {
+    color: #dc1a28;
+}
+
+.date {
+    color: #828282;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 60px;
+}
+
+.top-menu,
+.top-menu:hover,
+.top-menu:visited {
+    color: #030303;
+    font-size: 22px;
+    width: 100%;
+    margin-top: 60px;
+}
+
+.top-comentario {
+    font-size: 16px;
+    color: #828282;
+}
+
+.top-comentario:hover {
+    color: #FF385C;
+}
+
+.top-addpost {
+    color: rgb(5, 5, 5);
+    float: right;
+    position: unset;
+    margin-right: 5%;
+}
+
+.top-addpost:hover {
+    color: var(--gray);
+}
+
+.top-post {
+    text-align: center;
+}
+
+.top-post p {
+    text-align: justify;
+    font-weight: normal;
+    font-size: 14px;
+    width: 100%;
+}
+
+.top-h1 {
+    color: #1B1B1B;
+    font-size: 16px;
+    font-weight: bold;
+    width: 100%;
+}
+
+.top-h1:hover {
+    color: var(--gray);
+    text-decoration: none;
+}
+
+.container-post {
+    margin: 20px 80px;
+}
+
+.container-post h1 {
+    color: rgb(255, 56, 92);
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.container-post p {
+    text-align: justify;
+    width: 50%;
+}
+
+.progress {
+    width: 50%;
+    height: 20px;
+}
+
+.post-like {
+    text-align: start;
+    margin: 10px 80px;
+}
+
+.right {
+    float: right;
+}
+
+.container-comentarios {
+    width: 50%;
+    margin: 0 25%;
+}
+
+.container-comentarios h4 {
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(255, 56, 92);
+    margin-top: 50px;
+}
+
+.form-comment-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.container-comentarios p {
+    text-align: justify;
+    width: 100%;
+}
+
+.top-post {
+    margin: 0 20%;
+}
+
+.cntner {
+    width: 100%;
+}
+
+.comentario-zero {
+    text-align: center;
+    display: flex;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.container-error {
+    display: absolute;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.container-error p {
+    margin: 50px 0;
+}
+
+.container-error img {
+    width: 50%;
+}
