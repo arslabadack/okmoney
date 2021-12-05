@@ -42,6 +42,19 @@
                         <div class="card">
                             <div class="stat-widget-one">
                                 <div class="stat-content">
+                                    <div class="d-inline-block">
+                                        <a href="#">
+                                            <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Novo Recebimento</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-13">
+                        <div class="card">
+                            <div class="stat-widget-one">
+                                <div class="stat-content">
                                     <div class="stat-text">Total Entradas Financeiras</div>
                                     <div class="stat-digit gradient-3-text">R$ {{ total_in }}</div>
                                 </div>
@@ -88,16 +101,9 @@
                 <div class="col-6">
                     <div class="col-13">
                         <div class="card">
-                            <div class="stat-widget-one">
-                                <div class="stat-content">
-                                    <div class="row">
-                                        <div class="d-inline-block">
-                                            <a href="#">
-                                                <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Novo Recebimento</button>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="card-body">
+                                <h4 class="card-title">Pie chart</h4>
+                                <div id="total_donations_per_category"></div>
                             </div>
                         </div>
                     </div>
@@ -106,4 +112,39 @@
         </div>
     </div>
 
+    <script>
+        var ctx = document.getElementById("pieChart");
+        ctx.height = 150;
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [45, 25, 20, 10],
+                    backgroundColor: [
+                        "rgba(117, 113, 249,0.9)",
+                        "rgba(117, 113, 249,0.7)",
+                        "rgba(117, 113, 249,0.5)",
+                        "rgba(144,	104,	190,0.7)"
+                    ],
+                    hoverBackgroundColor: [
+                        "rgba(117, 113, 249,0.9)",
+                        "rgba(117, 113, 249,0.7)",
+                        "rgba(117, 113, 249,0.5)",
+                        "rgba(144,	104,	190,0.7)"
+                    ]
+
+                }],
+                labels: [
+                    "green",
+                    "green",
+                    "green"
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    </script>
+
 {% endblock %}
+

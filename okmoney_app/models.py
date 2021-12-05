@@ -23,7 +23,6 @@ class MoneyOut(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name='Autor', on_delete=models.CASCADE)
     date = models.DateField()
-    date = models.DateField()
     category = models.CharField(max_length=100, null=False, blank=False)
     reason = models.CharField(max_length=200)
     place = models.CharField(max_length=200, null=True, blank=True)

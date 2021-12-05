@@ -9,13 +9,16 @@
 <script src="{% static 'plugins/tables/js/datatable/dataTables.bootstrap4.min.js' %}"></script>
 <script src="{% static 'plugins/tables/js/datatable-init/datatable-basic.min.js' %}"></script>
 <script src="{% static 'plugins/bootstrap-datepicker/bootstrap-datepicker.min.js' %}"></script>
+<script src="{% static 'plugins/chart.js/Chart.bundle.min.js' %}"></script>
+
+
 <script>
     $('.complex-colorpicker').datepicker({ 
                 format: 'dd/mm/yyyy',
                 locale: 'pt-BR',
                 todayBtn: 'linked',
             });
-
-
 </script>
 
+<script src="{% static 'plugins/chart.js/Chart.bundle.min.js' %}"></script>
+<script src="{% static 'js/plugins-init/chartjs-init.js' %}"></script>
