@@ -103,7 +103,7 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Pie chart</h4>
-                                <div id="total_donations_per_category"></div>
+                                <canvas id="pieChart" width="500" height="250"></canvas>
                             </div>
                         </div>
                     </div>
@@ -112,39 +112,45 @@
         </div>
     </div>
 
-    <script>
-        var ctx = document.getElementById("pieChart");
-        ctx.height = 150;
-        var myChart = new Chart(ctx, {
-            type: 'pie',
-            data: {
-                datasets: [{
-                    data: [45, 25, 20, 10],
-                    backgroundColor: [
-                        "rgba(117, 113, 249,0.9)",
-                        "rgba(117, 113, 249,0.7)",
-                        "rgba(117, 113, 249,0.5)",
-                        "rgba(144,	104,	190,0.7)"
-                    ],
-                    hoverBackgroundColor: [
-                        "rgba(117, 113, 249,0.9)",
-                        "rgba(117, 113, 249,0.7)",
-                        "rgba(117, 113, 249,0.5)",
-                        "rgba(144,	104,	190,0.7)"
-                    ]
+    {% block custom_scripts %}
+        {{ total_expenses|json_script:"total_expenses" }}
+        <script>
+            const totalExpenses = JSON.parse(document.getElementById('total_expenses').textContent);
+            var ctx = document.getElementById("pieChart");
+            ctx.height = 150;
+            var myChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    datasets: [{
+                        data: totalExpenses.map(el => el.amout),
+                        backgroundColor: [
+                            "rgba(255, 99, 283,0.9)",
+                            "rgba(255, 99, 220,0.9)",
+                            "rgba(255, 99, 186,0.9)",
+                            "rgba(117, 113, 249,0.9)",
+                            "rgba(117, 113, 249,0.7)",
+                            "rgba(117, 113, 249,0.5)",
+                            "rgba(144,	104,	190,0.7)"
+                        ],
+                        hoverBackgroundColor: [
+                            "rgba(255, 99, 283,0.9)",
+                            "rgba(255, 99, 220,0.9)",
+                            "rgba(255, 99, 186,0.9)",
+                            "rgba(117, 113, 249,0.9)",
+                            "rgba(117, 113, 249,0.7)",
+                            "rgba(117, 113, 249,0.5)",
+                            "rgba(144,	104,	190,0.7)"
+                        ]
 
-                }],
-                labels: [
-                    "green",
-                    "green",
-                    "green"
-                ]
-            },
-            options: {
-                responsive: true
-            }
-        });
-    </script>
+                    }],
+                    labels: totalExpenses.map(el => el.category)
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        </script>
+    {% endblock %}
 
 {% endblock %}
 
