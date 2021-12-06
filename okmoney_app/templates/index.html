@@ -146,7 +146,17 @@
                     ]
 
                 }],
-                labels: totalExpenses.map(el => el.category)
+                {% comment %} totalExpenses.map(el => el.category) {% endcomment %}
+                labels: [
+                    "Higiene e Saúde",
+                    "Alimentação",
+                    "Lazer",
+                    "Entretenimento",
+                    "Energia/Saneamento",
+                    "Encargos/Impostos",
+                    "Combustível",
+                    "Outros"
+                ]
             },
             options: {
                 responsive: true
