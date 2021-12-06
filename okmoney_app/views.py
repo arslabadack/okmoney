@@ -74,14 +74,7 @@ class Index(LoginRequiredMixin, TemplateView):
 
             'future_releases': models.Future.objects.all(),
 
-            # 'total_health': total_health,
-            # 'total_food': total_food,
-            # 'total_lazer': total_lazer,
-            # 'total_entertainment': total_entertainment,
-            # 'total_energywater': total_energywater,
-            # 'total_taxes': total_taxes,
-            # 'total_fuel': total_fuel,
-            # 'total_other': total_other,
+            'total_expenses': total_expenses,
         }
 
         self.render = render(
