@@ -111,46 +111,47 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
-    {% block custom_scripts %}
-        {{ total_expenses|json_script:"total_expenses" }}
-        <script>
-            const totalExpenses = JSON.parse(document.getElementById('total_expenses').textContent);
-            var ctx = document.getElementById("pieChart");
-            ctx.height = 150;
-            var myChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    datasets: [{
-                        data: totalExpenses.map(el => el.amout),
-                        backgroundColor: [
-                            "rgba(255, 99, 283,0.9)",
-                            "rgba(255, 99, 220,0.9)",
-                            "rgba(255, 99, 186,0.9)",
-                            "rgba(117, 113, 249,0.9)",
-                            "rgba(117, 113, 249,0.7)",
-                            "rgba(117, 113, 249,0.5)",
-                            "rgba(144,	104,	190,0.7)"
-                        ],
-                        hoverBackgroundColor: [
-                            "rgba(255, 99, 283,0.9)",
-                            "rgba(255, 99, 220,0.9)",
-                            "rgba(255, 99, 186,0.9)",
-                            "rgba(117, 113, 249,0.9)",
-                            "rgba(117, 113, 249,0.7)",
-                            "rgba(117, 113, 249,0.5)",
-                            "rgba(144,	104,	190,0.7)"
-                        ]
+{% block custom_scripts %}
+    {{ total_expenses|json_script:"total_expenses" }}
+    <script>
+        const totalExpenses = JSON.parse(document.getElementById('total_expenses').textContent);
+        var ctx = document.getElementById("pieChart");
+        ctx.height = 150;
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: totalExpenses.map(el => el.amount),
+                    backgroundColor: [
+                        "rgba(175, 120, 283,0.9)",
+                        "rgba(200, 99, 283,0.9)",
+                        "rgba(230, 99, 220,0.9)",
+                        "rgba(270, 99, 186,0.9)",
+                        "rgba(117, 113, 249,0.9)",
+                        "rgba(117, 113, 249,0.7)",
+                        "rgba(117, 113, 249,0.5)",
+                        "rgba(144,	104,	190,0.7)"
+                    ],
+                    hoverBackgroundColor: [
+                        "rgba(175, 120, 283,0.9)",
+                        "rgba(200, 99, 283,0.9)",
+                        "rgba(230, 99, 220,0.9)",
+                        "rgba(270, 99, 186,0.9)",
+                        "rgba(117, 113, 249,0.9)",
+                        "rgba(117, 113, 249,0.7)",
+                        "rgba(117, 113, 249,0.5)",
+                        "rgba(144,	104,	190,0.7)"
+                    ]
 
-                    }],
-                    labels: totalExpenses.map(el => el.category)
-                },
-                options: {
-                    responsive: true
-                }
-            });
-        </script>
-    {% endblock %}
-
+                }],
+                labels: totalExpenses.map(el => el.category)
+            },
+            options: {
+                responsive: true
+            }
+        });
+    </script>
 {% endblock %}
 

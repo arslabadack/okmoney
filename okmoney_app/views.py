@@ -47,23 +47,25 @@ class Index(LoginRequiredMixin, TemplateView):
             total_out_future = 0
 
         total_expenses = [
-            {'category': 'total_health', 'amount': models.MoneyOut.objects.filter(
-                category='saude').aggregate(total=Sum('value')).get('total')},
-            {'category': 'total_food', 'amount': models.MoneyOut.objects.filter(
-                category='alimentacao').aggregate(total=Sum('value')).get('total')},
-            {'category': 'total_lazer', 'amount': models.MoneyOut.objects.filter(
-                category='lazer').aggregate(total=Sum('value')).get('total')},
-            {'category': 'total_entertainment', 'amount': models.MoneyOut.objects.filter(
-                category='entretenimento').aggregate(total=Sum('value')).get('total')},
-            {'category': 'total_energywater', 'amount': models.MoneyOut.objects.filter(
-                category='energiasaneamento').aggregate(total=Sum('value')).get('total')},
-            {'category': 'total_taxes', 'amount': models.MoneyOut.objects.filter(
-                category='impostos').aggregate(total=Sum('value')).get('total')},
-            {'category': 'total_fuel', 'amount': models.MoneyOut.objects.filter(
-                category='combustivel').aggregate(total=Sum('value')).get('total')},
-            {'category': 'total_other', 'amount': models.MoneyOut.objects.filter(
-                category='outros').aggregate(total=Sum('value')).get('total')}
+            {'category': 'total_health', 'amount': float(models.MoneyOut.objects.filter(
+                category='saude').aggregate(total=Sum('value')).get('total') or 0.0)},
+            {'category': 'total_food', 'amount': float(models.MoneyOut.objects.filter(
+                category='alimentacao').aggregate(total=Sum('value')).get('total') or 0.0)},
+            {'category': 'total_lazer', 'amount': float(models.MoneyOut.objects.filter(
+                category='lazer').aggregate(total=Sum('value')).get('total') or 0.0)},
+            {'category': 'total_entertainment', 'amount': float(models.MoneyOut.objects.filter(
+                category='entretenimento').aggregate(total=Sum('value')).get('total') or 0.0)},
+            {'category': 'total_energywater', 'amount': float(models.MoneyOut.objects.filter(
+                category='energiasaneamento').aggregate(total=Sum('value')).get('total') or 0.0)},
+            {'category': 'total_taxes', 'amount': float(models.MoneyOut.objects.filter(
+                category='impostos').aggregate(total=Sum('value')).get('total') or 0.0)},
+            {'category': 'total_fuel', 'amount': float(models.MoneyOut.objects.filter(
+                category='combustivel').aggregate(total=Sum('value')).get('total') or 0.0)},
+            {'category': 'total_other', 'amount': float(models.MoneyOut.objects.filter(
+                category='outros').aggregate(total=Sum('value')).get('total') or 0.0)}
         ]
+
+        print(total_expenses)
 
         context = {
             'total_in': total_in,
