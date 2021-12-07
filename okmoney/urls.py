@@ -25,6 +25,7 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('users/', include('users.urls')),
     path('users/', include('django.contrib.auth.urls')),
+
 ]
 
 handler404 = views.error404

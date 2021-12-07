@@ -1,17 +1,67 @@
 from . import forms
 from . import models
 from . import serializers
-from django.views import View
 from django.db.models import Sum
-# from rest_framework import APIView
 from django.template import loader
 from django.contrib import messages
+from rest_framework import status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http.response import HttpResponse, JsonResponse
-from django.contrib.auth import authenticate, login, logout
+from django.http.response import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, TemplateView
+
+
+class MoneyInAPIView(APIView):
+    """
+    API MoneyIn
+    """
+
+    def get(self, request):
+        money_in = models.MoneyIn.objects.all()
+        serializer = serializers.MoneyInSerializer(money_in, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = serializers.MoneyInSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class MoneyOutAPIView(APIView):
+    """
+    API MoneyOut
+    """
+
+    def get(self, request):
+        money_out = models.MoneyOut.objects.all()
+        serializer = serializers.MoneyOutSerializer(money_out, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = serializers.MoneyOutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class FutureAPIView(APIView):
+    """
+    API MoneyFuture
+    """
+
+    def get(self, request):
+        future = models.Future.objects.all()
+        serializer = serializers.FutureSerializer(future, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = serializers.FutureSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class Index(LoginRequiredMixin, TemplateView):
