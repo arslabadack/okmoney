@@ -24,7 +24,6 @@ urlpatterns = [
     path('', include('okmoney_app.urls')),
     path('blog/', include('blog.urls')),
     path('users/', include('users.urls')),
-    path('users/', include('django.contrib.auth.urls')),
 
 ]
 

@@ -1,3 +1,4 @@
+import logging
 from . import forms
 from . import models
 from . import serializers
@@ -5,63 +6,63 @@ from django.db.models import Sum
 from django.template import loader
 from django.contrib import messages
 from rest_framework import status
+from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http.response import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect, get_object_or_404
+
+logger = logging.getLogger(__name__)
 
 
-class MoneyInAPIView(APIView):
+class MoneyInAPIView(generics.ListCreateAPIView):
     """
     API MoneyIn
     """
-
-    def get(self, request):
-        money_in = models.MoneyIn.objects.all()
-        serializer = serializers.MoneyInSerializer(money_in, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = serializers.MoneyInSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    queryset = models.MoneyIn.objects.all()
+    serializer_class = serializers.MoneyInSerializer
 
 
-class MoneyOutAPIView(APIView):
+class MoneyInSingleAPIView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    API MoneyIn Single
+    """
+    queryset = models.MoneyIn.objects.all()
+    serializer_class = serializers.MoneyInSerializer
+
+
+class MoneyOutAPIView(generics.ListCreateAPIView):
     """
     API MoneyOut
     """
-
-    def get(self, request):
-        money_out = models.MoneyOut.objects.all()
-        serializer = serializers.MoneyOutSerializer(money_out, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = serializers.MoneyOutSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    queryset = models.MoneyOut.objects.all()
+    serializer_class = serializers.MoneyOutSerializer
 
 
-class FutureAPIView(APIView):
+class MoneyOutSingleAPIView(generics.RetrieveUpdateDestroyAPIView):
     """
-    API MoneyFuture
+    API MoneyOut Single
     """
+    queryset = models.MoneyOut.objects.all()
+    serializer_class = serializers.MoneyOutSerializer
 
-    def get(self, request):
-        future = models.Future.objects.all()
-        serializer = serializers.FutureSerializer(future, many=True)
-        return Response(serializer.data)
 
-    def post(self, request):
-        serializer = serializers.FutureSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+class FutureAPIView(generics.ListCreateAPIView):
+    """
+    API Future
+    """
+    queryset = models.Future.objects.all()
+    serializer_class = serializers.FutureSerializer
+
+
+class FutureSingleAPIView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    API Future Single
+    """
+    queryset = models.Future.objects.all()
+    serializer_class = serializers.FutureSerializer
 
 
 class Index(LoginRequiredMixin, TemplateView):
@@ -114,8 +115,6 @@ class Index(LoginRequiredMixin, TemplateView):
             {'category': 'total_other', 'amount': float(models.MoneyOut.objects.filter(
                 category='outros').aggregate(total=Sum('value')).get('total') or 0.0)}
         ]
-
-        print(total_expenses)
 
         context = {
             'total_in': total_in,
@@ -268,6 +267,8 @@ class MoneyIn(LoginRequiredMixin, TemplateView):
             'Entrada financeira registrada',
         )
 
+        logger.info(
+            f'Entrada financeira registrada por {(self.request.user.username)}')
         return redirect('index')
 
 
@@ -301,6 +302,7 @@ class MoneyInEdit(LoginRequiredMixin, TemplateView):
         self.release.save()
         messages.success(self.request, 'Lançamento atualizado')
 
+        logger.warning('Uma alteração foi realizada no lançamento financeiro')
         return redirect('list')
 
 
@@ -314,6 +316,8 @@ class MoneyInDelete(LoginRequiredMixin, TemplateView):
         self.money_in_object.delete()
 
     def get(self, *args, **kwargs):
+        logger.warning(
+            'Um lançamento financeiro foi deletado do banco de dados')
         return redirect('list')
 
 
@@ -358,7 +362,8 @@ class MoneyOut(LoginRequiredMixin, TemplateView):
             self.request,
             'Saída financeira registrada',
         )
-
+        logger.info(
+            f'Saída financeira registrada por {(self.request.user.username)}')
         return redirect('index')
 
 
@@ -391,7 +396,7 @@ class MoneyOutEdit(LoginRequiredMixin, TemplateView):
 
         self.release.save()
         messages.success(self.request, 'Lançamento atualizado')
-
+        logger.warning('Uma alteração foi realizada no lançamento financeiro')
         return redirect('list')
 
 
@@ -405,6 +410,8 @@ class MoneyOutDelete(LoginRequiredMixin, TemplateView):
         self.money_out_object.delete()
 
     def get(self, *args, **kwargs):
+        logger.warning(
+            'Um lançamento financeiro foi deletado do banco de dados')
         return redirect('list')
 
 
@@ -454,7 +461,8 @@ class Future(LoginRequiredMixin, TemplateView):
             value=self.future_form.cleaned_data.get('value'),
         )
         new_release.save()
-
+        logger.info(
+            f'Lançamento futuro registrado por {(self.request.user.username)}')
         return redirect('future')
 
 
@@ -487,7 +495,7 @@ class FutureEdit(LoginRequiredMixin, TemplateView):
 
         self.release.save()
         messages.success(self.request, 'Lançamento editado')
-
+        logger.warning('Uma alteração foi realizada no lançamento financeiro')
         return redirect('future')
 
 
@@ -501,6 +509,8 @@ class FutureDelete(LoginRequiredMixin, TemplateView):
         self.future_object.delete()
 
     def get(self, *args, **kwargs):
+        logger.warning(
+            'Um lançamento financeiro foi deletado do banco de dados')
         return redirect('future')
 
 

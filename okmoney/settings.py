@@ -28,6 +28,58 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com']
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console': {
+            'format': '{name}({levelname}) {message}',
+            'style': '{',
+        },
+        'file': {
+            'format': '{asctime}-{name}-({levelname}) {message}',
+            'style': '{',
+        },
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+            'filters': ['require_debug_true'],
+        },
+        'debug': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'file',
+            'filename': os.path.join(BASE_DIR, 'okmoney_app/logs/debugs.log'),
+            'filters': ['require_debug_true'],
+        },
+        'errors': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'formatter': 'file',
+            'filename': os.path.join(BASE_DIR, 'okmoney_app/logs/errors.log'),
+            'filters': ['require_debug_true'],
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['debug', 'console'],
+            'level': 'DEBUG',
+        },
+        'blog': {
+            'handlers': ['errors', 'debug'],
+            'level': 'DEBUG',
+        },
+    }
+}
+
 # Application definition
 
 INSTALLED_APPS = [

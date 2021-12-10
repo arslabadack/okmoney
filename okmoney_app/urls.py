@@ -15,8 +15,15 @@ urlpatterns = [
     path('future/', views.Future.as_view(), name='future'),
     path('future_edit/<int:pk>', views.FutureEdit.as_view(), name='future_edit'),
     path('future/<int:pk>', views.FutureDelete.as_view(), name='future_delete'),
-
+    # REST API
     path('rest_money_in/', views.MoneyInAPIView.as_view(), name='money_in_api'),
     path('rest_money_out/', views.MoneyOutAPIView.as_view(), name='money_out_api'),
     path('rest_future/', views.FutureAPIView.as_view(), name='future_api'),
+
+    path('rest_money_in/<int:pk>/',
+         views.MoneyInSingleAPIView.as_view(), name='m_in_single'),
+    path('rest_money_out/<int:pk>/',
+         views.MoneyOutSingleAPIView.as_view(), name='m_out_single'),
+    path('rest_future/<int:pk>/',
+         views.FutureSingleAPIView.as_view(), name='f_single'),
 ]
