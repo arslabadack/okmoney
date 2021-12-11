@@ -14,3 +14,5 @@ PyMySQL==1.0.2
 pytz==2021.3
 soupsieve==2.2.1
 sqlparse==0.4.2
+model-mommy==2.0.0
+coverage==6.2
