@@ -1,7 +1,6 @@
 from datetime import date
-from django.test import TestCase
 from model_mommy import mommy
-from okmoney_app.forms import MoneyInModelForm
+from django.test import TestCase
 
 from okmoney_app.models import *
 
@@ -77,7 +76,6 @@ class RemindersTestCase(TestCase):
 
     def setUp(self):
         self.reminder = mommy.make('Reminders')
-        print(self.reminder)
 
     def test_reminder_content(self):
         self.assertEqual(str(self.reminder.content), self.reminder.content)

@@ -206,6 +206,10 @@ REST_FRAMEWORK = {
     )
 }
 
+# send email configs
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
+
 # Mensagens
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
@@ -215,6 +219,5 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
-LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'index'
-LOGOUT_REDIRECT_URL = 'users:login'
+LOGOUT_REDIRECT_URL = 'login'

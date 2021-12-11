@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework.authtoken.views import obtain_auth_token
 from . import views
 
 urlpatterns = [
@@ -19,6 +20,7 @@ urlpatterns = [
     path('reminders/<int:pk>', views.RemindersDelete.as_view(),
          name='reminders_delete'),
     # REST API
+    path('rest_token_auth/', obtain_auth_token, name='api_token_auth'),
     path('rest_money_in/', views.MoneyInAPIView.as_view(), name='money_in_api'),
     path('rest_money_out/', views.MoneyOutAPIView.as_view(), name='money_out_api'),
     path('rest_future/', views.FutureAPIView.as_view(), name='future_api'),

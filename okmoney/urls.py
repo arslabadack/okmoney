@@ -21,10 +21,12 @@ from okmoney_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('users.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('', include('okmoney_app.urls')),
     path('blog/', include('blog.urls')),
-    path('users/', include('users.urls')),
     path('api-auth/', include('rest_framework.urls')),
+
 
 ]
 
