@@ -5,10 +5,7 @@ from . import serializers
 from django.db.models import Sum
 from django.template import loader
 from django.contrib import messages
-from rest_framework import status
 from rest_framework import generics
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from django.http.response import HttpResponse
 from django.views.generic import ListView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -126,6 +123,8 @@ class Index(LoginRequiredMixin, TemplateView):
             'future_releases': models.Future.objects.all(),
 
             'total_expenses': total_expenses,
+
+            'reminders': models.Reminders.objects.all()
         }
 
         self.render = render(
@@ -264,7 +263,7 @@ class MoneyIn(LoginRequiredMixin, TemplateView):
 
         messages.success(
             self.request,
-            'Entrada financeira registrada',
+            'Entrada Financeira Registrada com Sucesso!'
         )
 
         logger.info(
@@ -300,7 +299,7 @@ class MoneyInEdit(LoginRequiredMixin, TemplateView):
             return self.render
 
         self.release.save()
-        messages.success(self.request, 'Lançamento atualizado')
+        messages.info(self.request, 'Entrada Financeira Editada com Sucesso!')
 
         logger.warning('Uma alteração foi realizada no lançamento financeiro')
         return redirect('list')
@@ -314,6 +313,8 @@ class MoneyInDelete(LoginRequiredMixin, TemplateView):
             models.MoneyIn, pk=self.kwargs.get('pk'))
 
         self.money_in_object.delete()
+        messages.warning(
+            self.request, 'Entrada Financeira Excluída com Sucesso!')
 
     def get(self, *args, **kwargs):
         logger.warning(
@@ -360,7 +361,7 @@ class MoneyOut(LoginRequiredMixin, TemplateView):
 
         messages.success(
             self.request,
-            'Saída financeira registrada',
+            'Saída Financeira Registrada com Sucesso!',
         )
         logger.info(
             f'Saída financeira registrada por {(self.request.user.username)}')
@@ -395,7 +396,7 @@ class MoneyOutEdit(LoginRequiredMixin, TemplateView):
             return self.render
 
         self.release.save()
-        messages.success(self.request, 'Lançamento atualizado')
+        messages.info(self.request, 'Saída Financeira Editada com Sucesso!')
         logger.warning('Uma alteração foi realizada no lançamento financeiro')
         return redirect('list')
 
@@ -408,6 +409,8 @@ class MoneyOutDelete(LoginRequiredMixin, TemplateView):
             models.MoneyOut, pk=self.kwargs.get('pk'))
 
         self.money_out_object.delete()
+        messages.warning(
+            self.request, 'Saída Financeira Excluída com Sucesso!')
 
     def get(self, *args, **kwargs):
         logger.warning(
@@ -461,6 +464,10 @@ class Future(LoginRequiredMixin, TemplateView):
             value=self.future_form.cleaned_data.get('value'),
         )
         new_release.save()
+        messages.success(
+            self.request,
+            'Lançamento Futuro Registrado com Sucesso!',
+        )
         logger.info(
             f'Lançamento futuro registrado por {(self.request.user.username)}')
         return redirect('future')
@@ -494,7 +501,8 @@ class FutureEdit(LoginRequiredMixin, TemplateView):
             return self.render
 
         self.release.save()
-        messages.success(self.request, 'Lançamento editado')
+        messages.success(
+            self.request, 'Lançamento Futuro Editado com Sucesso!')
         logger.warning('Uma alteração foi realizada no lançamento financeiro')
         return redirect('future')
 
@@ -507,11 +515,59 @@ class FutureDelete(LoginRequiredMixin, TemplateView):
             models.Future, pk=self.kwargs.get('pk'))
 
         self.future_object.delete()
+        messages.warning(
+            self.request, 'Lançamento Futuro Excluído com Sucesso!')
 
     def get(self, *args, **kwargs):
         logger.warning(
             'Um lançamento financeiro foi deletado do banco de dados')
         return redirect('future')
+
+
+class Reminders(LoginRequiredMixin, TemplateView):
+    template_name = 'index.html'
+
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        context = {
+            'reminder_form': forms.RemindersModelForm(
+                data=self.request.POST or None
+            ),
+        }
+
+        self.reminder_form = context['reminder_form']
+
+        self.render = render(self.request, self.template_name, context)
+
+    def get(self, *args, **kwargs):
+        return self.render
+
+    def post(self, *args, **kwargs):
+        if not self.reminder_form.is_valid():
+            return self.render
+
+        new_reminder = models.Reminder(
+            author=self.request.user,
+            done=self.reminder_form.cleaned_data.get('done'),
+            remind=self.reminder_form.cleaned_data.get('remind'),
+        )
+        new_reminder.save()
+
+        return redirect('index')
+
+
+class RemindersDelete(LoginRequiredMixin, TemplateView):
+    def setup(self, *args, **kwargs):
+        super().setup(*args, **kwargs)
+
+        self.reminder_object = get_object_or_404(
+            models.Reminder, pk=self.kwargs.get('pk'))
+
+        self.reminder_object.delete()
+
+    def get(self, *args, **kwargs):
+        return redirect('index')
 
 
 def error404(request, exception):

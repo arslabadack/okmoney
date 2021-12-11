@@ -2,10 +2,10 @@
 {% load static %}
 
 {% block content %}
-
     <div class="content-body">
         <div class="row page-titles mx-0">
             <div class="col p-md-0">
+                {% include 'partial/_messages.html' %}
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item active"><a href="{% url 'index' %}">Home</a></li>
                     <li class="breadcrumb-item">Fluxo de Caixa</li>
@@ -20,7 +20,7 @@
                             <h4 class="card-title">Entradas Financeiras</h4> 
                             {% if money_in_list %}
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered zero-configuration">
+                                    <table class="table table-striped ">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Data</th>
@@ -67,7 +67,7 @@
                             <h4 class="card-title">Saídas Financeiras</h4> 
                             {% if money_out_list %}
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered zero-configuration">
+                                    <table class="table table-striped">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Data</th>
@@ -111,6 +111,10 @@
                             {% endif %}
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
                     <div class="d-inline-block">
                         <a href="{% url 'index' %}">
                             <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Voltar</button>
@@ -120,5 +124,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

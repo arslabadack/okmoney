@@ -1,3 +1,4 @@
+from typing import ContextManager
 from django.db import models
 from users.models import *
 from django.conf import settings
@@ -51,3 +52,16 @@ class Future(models.Model):
 
     def __str__(self):
         return f' Motivo: {self.reason}, Data de Recebimento: {self.receiving_date}'
+
+
+class Reminders(models.Model):
+    author = models.ForeignKey(
+        settings.AUTH_USER_MODEL, verbose_name='Autor', on_delete=models.CASCADE)
+    done = models.BooleanField(default=False)
+    content = models.TextField(max_length=500, null=False, blank=False)
+
+    class Meta:
+        ordering = ['id']
+
+    def __str__(self):
+        return f' content: {self.content}'

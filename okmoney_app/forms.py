@@ -1,8 +1,5 @@
-from django import forms
-from django.db.models import fields
 from . import models
-from logging import PlaceHolder
-
+from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import ButtonHolder, Layout, Column, HTML, Submit, Div
 
@@ -282,6 +279,48 @@ class FutureModelForm(forms.ModelForm):
             Div(
                 Column('reason', css_class='col-md-6'),
                 Column('value', css_class='col-md-3'),
+                css_class='row'
+            ),
+            ButtonHolder(
+                HTML(
+                    '<a class="btn mb-1 btn-rounded btn-danger" href="{% url "index" %}" type="button">Cancelar</a>'
+                ),
+                Submit('submit', 'Salvar',
+                       css_class='btn mb-1 btn-rounded btn-success'),
+            )
+        )
+
+
+class RemindersModelForm(forms.ModelForm):
+
+    done = forms.BooleanField(
+        required=False,
+        initial=False,
+    )
+
+    remind = forms.CharField(
+        required=False,
+        label='Lembrete:',
+        max_length=300,
+        widget=forms.TextInput(attrs={'placeholder': 'Lembrete'}),
+    )
+
+    class Meta:
+        model = models.Reminders
+        fields = ['remind']
+
+    def clean(self, *args, **kwargs):
+        data = self.data
+        cleaned = self.cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super(RemindersModelForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper(self)
+        self.helper.form_method = 'post'
+        self.helper.layout = Layout(
+            Div(
+                Column('reminder', css_class='col-md-3'),
                 css_class='row'
             ),
             ButtonHolder(

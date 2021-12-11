@@ -7,12 +7,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 
 
-class Register(generic.CreateView):
-    form_class = CustomUserCreationForm
-    success_url = reverse_lazy('login')
-    template_name = 'register.html'
-
-
 class Login(View):
     def get(self, *args, **kwargs):
         return render(self.request, 'login.html')
@@ -41,3 +35,9 @@ class Logout(View):
     def get(self, *args, **kwargs):
         logout(self.request)
         return redirect('users:login')
+
+
+class Register(generic.CreateView):
+    form_class = CustomUserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'register.html'
