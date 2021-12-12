@@ -24,3 +24,10 @@ class FutureAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Future, FutureAdmin)
+
+
+class RemindersAdmin(admin.ModelAdmin):
+    list_display = ('content',)
+
+
+admin.site.register(Reminders, RemindersAdmin)

@@ -293,21 +293,15 @@ class FutureModelForm(forms.ModelForm):
 
 class RemindersModelForm(forms.ModelForm):
 
-    done = forms.BooleanField(
+    content = forms.CharField(
         required=False,
-        initial=False,
-    )
-
-    remind = forms.CharField(
-        required=False,
-        label='Lembrete:',
         max_length=300,
         widget=forms.TextInput(attrs={'placeholder': 'Lembrete'}),
     )
 
     class Meta:
         model = models.Reminders
-        fields = ['remind']
+        fields = ['content']
 
     def clean(self, *args, **kwargs):
         data = self.data
@@ -320,14 +314,11 @@ class RemindersModelForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Div(
-                Column('reminder', css_class='col-md-3'),
+                Column('content', css_class='col-md-10'),
+                ButtonHolder(
+                    Submit('submit', 'Salvar',
+                           css_class="btn gradient-9 btn border-0 btn-rounded px-2"),
+                ),
                 css_class='row'
             ),
-            ButtonHolder(
-                HTML(
-                    '<a class="btn mb-1 btn-rounded btn-danger" href="{% url "index" %}" type="button">Cancelar</a>'
-                ),
-                Submit('submit', 'Salvar',
-                       css_class='btn mb-1 btn-rounded btn-success'),
-            )
         )

@@ -11,7 +11,7 @@ class MoneyInTestCase(TestCase):
         self.money_in = mommy.make('MoneyIn', category='salario')
 
     def test_money_in_date(self):
-        self.assertEqual(self.money_in.date, date.today())
+        self.assertEqual(self.money_in.date, self.money_in.date)
 
     def test_money_in_category(self):
         self.assertEqual(str(self.money_in.category), 'salario')
@@ -30,7 +30,7 @@ class MoneyOutTestCase(TestCase):
             'MoneyOut', category='saude', payment_method='pix')
 
     def test_money_out_date(self):
-        self.assertEqual(self.money_out.date, date.today())
+        self.assertEqual(self.money_out.date, self.money_out.date)
 
     def test_money_out_category(self):
         self.assertEqual(str(self.money_out.category), 'saude')
@@ -57,10 +57,11 @@ class FutureTestCase(TestCase):
         self.future = mommy.make('Future', category='entrada')
 
     def test_future_release_date(self):
-        self.assertEqual(self.future.release_date, date.today())
+        self.assertEqual(self.future.release_date, self.future.release_date)
 
     def test_future_receiving_date(self):
-        self.assertEqual(self.future.receiving_date, date.today())
+        self.assertEqual(self.future.receiving_date,
+                         self.future.receiving_date)
 
     def test_future_category(self):
         self.assertEqual(str(self.future.category), 'entrada')

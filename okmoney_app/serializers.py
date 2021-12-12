@@ -41,3 +41,12 @@ class FutureSerializer(serializers.ModelSerializer):
             'reason',
             'value',
         )
+
+
+class RemindersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Reminders
+        fields = (
+            'author',
+            'content',
+        )

@@ -57,11 +57,10 @@ class Future(models.Model):
 class Reminders(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name='Autor', on_delete=models.CASCADE)
-    done = models.BooleanField(default=False)
     content = models.TextField(max_length=500, null=False, blank=False)
 
     class Meta:
         ordering = ['id']
 
     def __str__(self):
-        return f' content: {self.content}'
+        return f' Conteúdo: {self.content}'

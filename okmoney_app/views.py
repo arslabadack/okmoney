@@ -2,6 +2,8 @@ import logging
 from . import forms
 from . import models
 from . import serializers
+from datetime import date
+from django.utils import timezone
 from django.db.models import Sum
 from django.template import loader
 from django.contrib import messages
@@ -124,7 +126,8 @@ class Index(LoginRequiredMixin, TemplateView):
 
             'total_expenses': total_expenses,
 
-            'reminders': models.Reminders.objects.all()
+            'reminders_form': forms.RemindersModelForm,
+            'all_reminders': models.Reminders.objects.all(),
         }
 
         self.render = render(
@@ -135,97 +138,6 @@ class Index(LoginRequiredMixin, TemplateView):
 
     def post(self, *args, **kwargs):
         pass
-
-
-# class Filter(LoginRequiredMixin, View):
-#     template_name = 'index.html'
-
-#     def setup(self, *args, **kwargs):
-#         super().setup(*args, **kwargs)
-
-#         initial_date = self.request.GET.get('initial_date')
-#         final_date = self.request.GET.get('final_date')
-
-#         if initial_date and final_date:
-#             initial_date = initial_date.split('/')
-#             initial_date = date(int(initial_date[2]), int(
-#                 initial_date[1]), int(initial_date[0]))
-#             final_date = final_date.split('/')
-#             final_date = date(int(final_date[2]), int(
-#                 final_date[1]), int(final_date[0]))
-
-#             if initial_date > final_date:
-#                 messages.warning(
-#                     self.request, 'A data inicial informada é maior do que a final, por favor informe as datas corretamente!')
-#         else:
-#             final_date = timezone.now().date()
-#             first = final_date.replace(day=1)
-#             lastMonth = first - datetime.timedelta(days=1)
-#             initial_date = datetime.date(
-#                 lastMonth.year, lastMonth.month, final_date.day)
-
-#         calendar_year = self.request.GET.get('input_year')
-
-#         if not calendar_year:
-#             calendar_year = timezone.now().year
-
-#         # Get total donations per date
-#         donations = models.Donation.objects.filter(
-#             date_register__year=calendar_year).order_by('date_register')
-#         dates = []
-
-#         for donation in donations:
-#             tmz_sp = pytz.timezone('America/Sao_Paulo')
-#             dates.append(str(donation.date_register.astimezone(tmz_sp).date()))
-
-#         total_donations_per_date = {i: dates.count(i) for i in dates}
-#         # .items(): return a list of tuples (key, value)
-#         total_donations_per_date = total_donations_per_date.items()
-
-#         # To calendar (heat map) chart
-#         donations_per_month = {
-#             'Jan': [], 'Fev': [], 'Mar': [], 'Abr': [],
-#             'Mai': [], 'Jun': [], 'Jul': [], 'Ago': [],
-#             'Set': [], 'Out': [], 'Nov': [], 'Dez': []
-#         }
-
-#         days = list()
-#         for i in range(0, 31):
-#             days.append(0)
-
-#         for month in donations_per_month:
-#             donations_per_month[month] = days.copy()
-
-#         for donations_date, total in total_donations_per_date:
-#             date_split = donations_date.split('-')
-
-#             for index, key in enumerate(donations_per_month):
-#                 if int(date_split[1]) == int(index+1):
-#                     donations_per_month[key][int(date_split[2]) - 1] = total
-#                     break
-
-#         donations_per_month_reverse = dict()
-#         for key in reversed(donations_per_month):
-#             donations_per_month_reverse[key] = donations_per_month[key]
-
-#         context = {
-#             'total_donations': models.Donation.objects.filter(date_register__range=[initial_date, final_date]).count(),
-#             'total_collected_donations': models.Donation.objects.filter(date_register__range=[initial_date, final_date], collected=True).count(),
-#             'total_not_collected_donations': models.Donation.objects.filter(date_register__range=[initial_date, final_date], collected=False).count(),
-#             'donations': models.Donation.objects.filter(date_register__range=[initial_date, final_date]).order_by('-date_register'),
-#             'total_donations_per_district': models.Donation.objects.filter(date_register__range=[initial_date, final_date]).values('district__name').annotate(total=Count('district__name')).order_by('district__name'),
-#             'total_donations_per_category': models.Donation.objects.filter(date_register__range=[initial_date, final_date]).values('category__name').annotate(total=Count('category__name')).order_by('category__name'),
-
-#             'donations_per_month': donations_per_month_reverse,
-#             'initial_date': initial_date,
-#             'final_date': final_date,
-#             'calendar_year': calendar_year,
-#         }
-
-#         self.render = render(self.request, self.template_name, context)
-
-#     def get(self, *args, **kwargs):
-#         return self.render
 
 
 class MoneyIn(LoginRequiredMixin, TemplateView):
@@ -249,6 +161,7 @@ class MoneyIn(LoginRequiredMixin, TemplateView):
 
     def post(self, *args, **kwargs):
         if not self.money_in_form.is_valid():
+            print("chegou aqui")
             return self.render
 
         new_money_in = models.MoneyIn(
@@ -531,12 +444,13 @@ class Reminders(LoginRequiredMixin, TemplateView):
         super().setup(*args, **kwargs)
 
         context = {
-            'reminder_form': forms.RemindersModelForm(
+            'reminders_form': forms.RemindersModelForm(
                 data=self.request.POST or None
             ),
+            'all_reminders': models.Reminders.objects.all(),
         }
 
-        self.reminder_form = context['reminder_form']
+        self.reminders_form = context['reminders_form']
 
         self.render = render(self.request, self.template_name, context)
 
@@ -544,13 +458,12 @@ class Reminders(LoginRequiredMixin, TemplateView):
         return self.render
 
     def post(self, *args, **kwargs):
-        if not self.reminder_form.is_valid():
+        if not self.reminders_form.is_valid():
             return self.render
 
-        new_reminder = models.Reminder(
+        new_reminder = models.Reminders(
             author=self.request.user,
-            done=self.reminder_form.cleaned_data.get('done'),
-            remind=self.reminder_form.cleaned_data.get('remind'),
+            content=self.reminders_form.cleaned_data.get('content'),
         )
         new_reminder.save()
 
@@ -562,7 +475,7 @@ class RemindersDelete(LoginRequiredMixin, TemplateView):
         super().setup(*args, **kwargs)
 
         self.reminder_object = get_object_or_404(
-            models.Reminder, pk=self.kwargs.get('pk'))
+            models.Reminders, pk=self.kwargs.get('pk'))
 
         self.reminder_object.delete()
 

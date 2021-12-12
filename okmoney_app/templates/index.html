@@ -2,8 +2,6 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-
-
 {% block title %}OKMoney{% endblock %}
 
 {% block content %}
@@ -128,16 +126,11 @@
                                                     <li>
                                                         <label><input type="checkbox"><i></i><span>get up</span><a href='#' class="ti-close"></a>
                                                         </label>
-                                                        
-                                                    
-                                                    </li>
-                                                    <li>
-                                                        <label><input type="checkbox" checked><i></i><span>stand up</span><a href='#' class="ti-close"></a>
-                                                        </label>
                                                     </li>
                                                 </ul>
+
                                             </div>
-                                            <input type="text" class="tdl-new2 form-control" placeholder="Write new item and hit 'Enter'..." required>
+                                            {% crispy reminders_form %}
                                         </div>
                                     </div>
                                 </div>
