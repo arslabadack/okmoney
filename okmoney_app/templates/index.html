@@ -141,17 +141,17 @@
                         </div>
                     </div>
                     <div class="col-lg-13 col-md-13">
-                        <div class="card">
+                        <div class="card" >
                             <div class="card-body px-3">
                                 <h4 class="card-title px-4 mb-3">Todo</h4>
                                 <div class="todo-list">
                                     <div class="tdl-holder">
                                         <div class="tdl-content">
                                             {% if all_reminders %}
-                                            <ul id="todo_list">
+                                            <ul id="todo_list" style="height: 256px; overflow-y:auto;">
                                                 {% for reminder in all_reminders %}
                                                     <li>
-                                                        <li><label><input type="checkbox" notchecked><i></i><span>{{ reminder.content }}</span><a href="{% url 'reminders_delete' reminder.pk %}"  class="ti-trash"></a></label></li>
+                                                        <li><label><span>{{ reminder.content }}</span><a href="#" id="{{reminder.pk}}"  class="ti-trash"></a></label></li>
                                                     </li>
                                                 {% endfor %}
                                             </ul>
@@ -162,7 +162,7 @@
                                             {% endif %}
                                         </div>
                                         <div class="px-4">
-                                            {% crispy reminders_form %}
+                                            <input type="text" class="tdl-new form-control" placeholder="Write new item and hit 'Enter'...">
                                         </div>
                                     </div>
                                 </div>
@@ -225,13 +225,15 @@
             }
         });
     </script>
+    {{ token|json_script:"token" }}
     <script>
+        const token = JSON.parse(document.getElementById('token').textContent);
         (function($) {
             "use strict"
         
         
             //todo list
-            $(".tdl-new").on('keypress', function(e) {
+            $(".tdl-new").on('keypress', async function(e) {
         
                 var code = (e.keyCode ? e.keyCode : e.which);
         
@@ -246,8 +248,22 @@
                         return false;
         
                     } else {
+
+                        const response=await(await fetch('rest/reminders/', {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': 'Token ' + token,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                'content': s,
+                            })
+                        }))
+                        const data = await response.json();
+
+                        const pk = data.pk;
         
-                        $(".tdl-content ul").append("<li><label><input type='checkbox'><i></i><span>" + v + "</span><a href='#' class='ti-trash'></a></label></li>");
+                        $(".tdl-content ul").append("<li><label><span>"+ v + `</span><a href='#' id="${pk}" class='ti-trash'></a></label></li>`);
         
                         $(this).val("");
         
@@ -261,52 +277,34 @@
         
         
         
-            $(".tdl-content a").on("click", function() {
+            $(".tdl-content a").on("click", async function(event) {
+
+                event.preventDefault();
         
                 var _li = $(this).parent().parent("li");
+
+                const id = $(this)[0].id;
+
+                const response=await(await fetch(`rest/reminders/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Token ' + token,
+                    },
+                }))
+
         
                 _li.addClass("remove").stop().delay(100).slideUp("fast", function() {
         
                     _li.remove();
         
                 });
-        
                 return false;
-        
             });
-        
-        
-        
-            // for dynamically created a tags
-        
-            $(".tdl-content").on('click', "a", function() {
-        
-                var _li = $(this).parent().parent("li");
-        
-                _li.addClass("remove").stop().delay(100).slideUp("fast", function() {
-        
-                    _li.remove();
-        
-                });
-        
-                return false;
-        
-            });
-        
-        
-        
-        
-        
-        
-        
-        
         })(jQuery);
     </script>
 
     <script>
         })(jQuery);
-
-
         (function($) {
             "use strict"
 

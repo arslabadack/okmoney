@@ -47,6 +47,7 @@ class RemindersSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Reminders
         fields = (
+            'pk',
             'author',
             'content',
         )

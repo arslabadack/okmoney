@@ -56,7 +56,7 @@ class Future(models.Model):
 
 class Reminders(models.Model):
     author = models.ForeignKey(
-        settings.AUTH_USER_MODEL, verbose_name='Autor', on_delete=models.CASCADE)
+        settings.AUTH_USER_MODEL, verbose_name='Autor', on_delete=models.CASCADE, null=True)
     content = models.TextField(max_length=500, null=False, blank=False)
 
     class Meta:

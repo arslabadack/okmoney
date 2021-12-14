@@ -6,28 +6,16 @@ from . import serializers
 from django.db.models import Sum
 from django.template import loader
 from django.contrib import messages
-from rest_framework import generics, viewsets
-from rest_framework.views import APIView
+from rest_framework import viewsets
+from rest_framework.authtoken.models import Token
 from django.http.response import HttpResponse
 from rest_framework.response import Response
 from django.views.generic import ListView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework.authtoken.views import ObtainAuthToken
 from django.shortcuts import render, redirect, get_object_or_404
 
 logger = logging.getLogger(__name__)
-
-# class RemindersAPIView(APIView):
-#     def get(self, request):
-#         reminders = models.Reminder.objects.all()
-#         serializer = serializers.ReminderSerializer(reminders, many=True)
-#         return Response(serializer.data)
-
-#     def post(self, request):
-#         content = request.POST["content"]
-#         Reminders.objects.create(content=content, author=request.user)
-
-#     def delete(self, request):
-#         Reminders.objects.all().delete()
 
 
 class RemindersViewSet(viewsets.ModelViewSet):
@@ -43,6 +31,8 @@ class Index(LoginRequiredMixin, TemplateView):
 
         initial_date = self.request.GET.get('initial_date')
         final_date = self.request.GET.get('final_date')
+
+        token, created = Token.objects.get_or_create(user=self.request.user)
 
         if not initial_date:
             initial_date = datetime.date.today()-datetime.timedelta(days=365)
@@ -105,6 +95,8 @@ class Index(LoginRequiredMixin, TemplateView):
             'total_in': total_in,
             'total_out': total_out,
             'current_balance': current_balance,
+
+            'token': token.key,
 
             'initial_date': initial_date,
             'final_date': final_date,
