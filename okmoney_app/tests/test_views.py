@@ -22,7 +22,7 @@ class MoneyInViewTestCase(TestCase):
 
     def test_money_in(self):
         dados = {
-            'date': '01/01/2021',
+            'date': '2021-01-01',
             'category': 'salario',
             'value': 1000,
             'observation': 'test',
@@ -46,7 +46,7 @@ class MoneyOutViewTestCase(TestCase):
 
     def test_money_out(self):
         dados = {
-            'date': '01/01/2021',
+            'date': '2021-01-01',
             'category': 'saude',
             'reason': 'reason_test',
             'place': 'place_test',

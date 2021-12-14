@@ -50,11 +50,26 @@
                         <div class="card">
                             <div class="stat-widget-one">
                                 <div class="stat-content">
-                                    <div class="d-inline-block">
-                                        <a href="#">
-                                            <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Novo Recebimento</button>
-                                        </a>
-                                    </div>
+                                    <form method="GET">
+                                        <div class="row">
+                                            <div class="col-5">
+                                                <div class="input-group">
+                                                    <input type="date" class="form-control" value='{{ initial_date|date:"d/m/Y" }}' required name="initial_date" id="initial_date"> 
+                                                </div>
+                                            </div>  
+                                            <div class="col-5">
+                                                <div class="input-group">
+                                                    <input type="date" class="form-control" value='{{ final_date|date:"d/m/Y" }}' required name="final_date" id="final_date"> 
+                                                </div>
+                                            </div>
+                                            <div class="d-inline-block">
+                                                <button type="submit" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Filtrar</button>
+                                                <a href="{% url 'index' %}">
+                                                    <button type="button" class="btn gradient-9 btn-lg border-0 btn-rounded px-4">Limpar</button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -75,6 +90,16 @@
                                 <div class="stat-content">
                                     <div class="stat-text">Total Saídas Financeiras</div>
                                     <div class="stat-digit gradient-5-text">R$ {{ total_out }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-13">
+                        <div class="card">
+                            <div class="stat-widget-one">
+                                <div class="stat-content">
+                                    <div class="stat-text">Saldo Atual</div>
+                                    <div class="stat-digit gradient-4-text">R$ {{ current_balance }}</div>
                                 </div>
                             </div>
                         </div>
@@ -111,32 +136,39 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Gastos por Categoria</h4>
-                                <canvas id="pieChart" width="500" height="250"></canvas>
+                                <canvas id="pieChart" width="350" height="250"></canvas>
                             </div>
                         </div>
-                    </div>                
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="todo-list">
-                                        <div class="tdl-holder">
-                                            <div class="tdl-content2 tdl-content--no-label">
-                                                <ul>
+                    </div>
+                    <div class="col-lg-13 col-md-13">
+                        <div class="card">
+                            <div class="card-body px-3">
+                                <h4 class="card-title px-4 mb-3">Todo</h4>
+                                <div class="todo-list">
+                                    <div class="tdl-holder">
+                                        <div class="tdl-content">
+                                            {% if all_reminders %}
+                                            <ul id="todo_list">
+                                                {% for reminder in all_reminders %}
                                                     <li>
-                                                        <label><input type="checkbox"><i></i><span>get up</span><a href='#' class="ti-close"></a>
-                                                        </label>
+                                                        <li><label><input type="checkbox" notchecked><i></i><span>{{ reminder.content }}</span><a href="{% url 'reminders_delete' reminder.pk %}"  class="ti-trash"></a></label></li>
                                                     </li>
-                                                </ul>
-
-                                            </div>
+                                                {% endfor %}
+                                            </ul>
+                                            {% else %}
+                                                <div class="alert danger">
+                                                    <p>Não existem lembretes</p>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="px-4">
                                             {% crispy reminders_form %}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>               
                 </div>
             </div>
         </div>
@@ -192,6 +224,107 @@
                 responsive: true
             }
         });
+    </script>
+    <script>
+        (function($) {
+            "use strict"
+        
+        
+            //todo list
+            $(".tdl-new").on('keypress', function(e) {
+        
+                var code = (e.keyCode ? e.keyCode : e.which);
+        
+                if (code == 13) {
+        
+                    var v = $(this).val();
+        
+                    var s = v.replace(/ +?/g, '');
+        
+                    if (s == "") {
+        
+                        return false;
+        
+                    } else {
+        
+                        $(".tdl-content ul").append("<li><label><input type='checkbox'><i></i><span>" + v + "</span><a href='#' class='ti-trash'></a></label></li>");
+        
+                        $(this).val("");
+        
+                    }
+        
+                }
+        
+            });
+        
+        
+        
+        
+        
+            $(".tdl-content a").on("click", function() {
+        
+                var _li = $(this).parent().parent("li");
+        
+                _li.addClass("remove").stop().delay(100).slideUp("fast", function() {
+        
+                    _li.remove();
+        
+                });
+        
+                return false;
+        
+            });
+        
+        
+        
+            // for dynamically created a tags
+        
+            $(".tdl-content").on('click', "a", function() {
+        
+                var _li = $(this).parent().parent("li");
+        
+                _li.addClass("remove").stop().delay(100).slideUp("fast", function() {
+        
+                    _li.remove();
+        
+                });
+        
+                return false;
+        
+            });
+        
+        
+        
+        
+        
+        
+        
+        
+        })(jQuery);
+    </script>
+
+    <script>
+        })(jQuery);
+
+
+        (function($) {
+            "use strict"
+
+            $('#todo_list').slimscroll({
+                position: "right",
+                size: "5px",
+                height: "250px",
+                color: "transparent"
+            });
+        
+            $('#activity').slimscroll({
+                position: "right",
+                size: "5px",
+                height: "390px",
+                color: "transparent"
+            });
+        
+        })(jQuery);
     </script>
     
 {% endblock %}

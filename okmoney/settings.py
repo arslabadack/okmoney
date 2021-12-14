@@ -173,7 +173,12 @@ LANGUAGE_CODE = 'pt-BR'
 
 TIME_ZONE = 'America/Sao_Paulo'
 
-TIME_INPUT_FORMATS = ('%d/%m/%Y', )
+DATE_INPUT_FORMATS = (
+    '%d.%m.%Y', '%d.%m.%Y', '%d.%m.%y',  # '25.10.2006', '25.10.2006', '25.10.06'
+    '%d-%m-%Y', '%d/%m/%Y', '%d/%m/%y',  # '25-10-2006', '25/10/2006', '25/10/06'
+    '%d %b %Y',  # '25 Oct 2006',
+    '%d %B %Y',  # '25 October 2006',
+)
 
 USE_I18N = True
 
@@ -199,6 +204,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # DRF
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (

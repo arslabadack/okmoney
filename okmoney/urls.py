@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import handler404, handler500
 from okmoney_app import views
+from okmoney_app.urls import router
 
 
 urlpatterns = [
@@ -26,6 +27,7 @@ urlpatterns = [
     path('', include('okmoney_app.urls')),
     path('blog/', include('blog.urls')),
     path('api-auth/', include('rest_framework.urls')),
+    path('rest/', include(router.urls)),
 
 
 ]

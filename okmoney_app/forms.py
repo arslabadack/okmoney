@@ -8,11 +8,13 @@ class MoneyInModelForm(forms.ModelForm):
     date = forms.DateField(
         required=True,
         label='Data ',
-        input_formats=['%d/%m/%Y'],
+        input_formats=['%Y-%m-%d'],
         widget=forms.DateInput(
             attrs={
-                'class': 'complex-colorpicker',
-                'placeholder': 'Data',
+                'class': '.datepicker',
+                'type': 'date',
+                'placeholder': 'dd/mm/aaaa',
+                'todayBtn': 'linked',
             }
         )
     )
@@ -90,11 +92,13 @@ class MoneyOutModelForm(forms.ModelForm):
     date = forms.DateField(
         required=True,
         label='Data ',
-        input_formats=['%d/%m/%Y'],
+        input_formats=['%Y-%m-%d'],
         widget=forms.DateInput(
             attrs={
-                'class': 'complex-colorpicker',
-                'placeholder': 'Data',
+                'class': '.datepicker',
+                'type': 'date',
+                'placeholder': 'dd/mm/aaaa',
+                'todayBtn': 'linked',
             }
         )
     )
@@ -208,11 +212,13 @@ class FutureModelForm(forms.ModelForm):
     release_date = forms.DateField(
         required=True,
         label='Data de Lançamento ',
-        input_formats=['%d/%m/%Y'],
+        input_formats=['%Y-%m-%d'],
         widget=forms.DateInput(
             attrs={
-                'class': 'complex-colorpicker',
-                'placeholder': 'Data de Lançamento',
+                'class': '.datepicker',
+                'type': 'date',
+                'placeholder': 'dd/mm/aaaa',
+                'todayBtn': 'linked',
             }
         )
     )
@@ -220,11 +226,13 @@ class FutureModelForm(forms.ModelForm):
     receiving_date = forms.DateField(
         required=True,
         label='Data de Recebimento ',
-        input_formats=['%d/%m/%Y'],
+        input_formats=['%Y-%m-%d'],
         widget=forms.DateInput(
             attrs={
-                'class': 'complex-colorpicker',
-                'placeholder': 'Data de Recebimento',
+                'class': '.datepicker',
+                'type': 'date',
+                'placeholder': 'dd/mm/aaaa',
+                'todayBtn': 'linked',
             }
         )
     )
@@ -295,8 +303,10 @@ class RemindersModelForm(forms.ModelForm):
 
     content = forms.CharField(
         required=False,
-        max_length=300,
-        widget=forms.TextInput(attrs={'placeholder': 'Lembrete'}),
+        max_length=500,
+        label='',
+        widget=forms.TextInput(
+            attrs={'placeholder': 'Digite seu lembrete aqui'}),
     )
 
     class Meta:
@@ -314,11 +324,7 @@ class RemindersModelForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.layout = Layout(
             Div(
-                Column('content', css_class='col-md-10'),
-                ButtonHolder(
-                    Submit('submit', 'Salvar',
-                           css_class="btn gradient-9 btn border-0 btn-rounded px-2"),
-                ),
+                Column('content', css_class='col-11'),
                 css_class='row'
             ),
         )

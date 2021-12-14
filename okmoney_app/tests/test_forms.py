@@ -6,7 +6,7 @@ class MoneyInFormTestCase(TestCase):
 
     def test_form_is_valid(self):
         form = MoneyInModelForm({
-            'date': '01/01/2021',
+            'date': '2021-01-01',
             'category': 'salario',
             'value': 5000.00,
             'observation': 'observation'
@@ -15,7 +15,7 @@ class MoneyInFormTestCase(TestCase):
 
     def test_form_is_blank(self):
         form = MoneyInModelForm({
-            'date': '01/01/2021',
+            'date': '2021-01-01',
             'category': 'salario',
             'observation': 'observation'
         })
@@ -28,7 +28,7 @@ class MoneyOutFormTestCase(TestCase):
 
     def test_form_is_valid(self):
         form = MoneyOutModelForm({
-            'date': '01/01/2021',
+            'date': '2021-01-01',
             'category': 'impostos',
             'reason': 'motivo_teste',
             'place': 'local_teste',
@@ -54,8 +54,8 @@ class FutureFormTestCase(TestCase):
 
     def test_form_is_valid(self):
         form = FutureModelForm({
-            'release_date': '01/01/2021',
-            'receiving_date': '02/01/2021',
+            'release_date': '2021-01-01',
+            'receiving_date': '2021-01-01',
             'category': 'entrada',
             'reason': 'motivo_teste',
             'value': 100.00,

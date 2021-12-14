@@ -1,67 +1,38 @@
 import logging
+import datetime
 from . import forms
 from . import models
 from . import serializers
-from datetime import date
-from django.utils import timezone
 from django.db.models import Sum
 from django.template import loader
 from django.contrib import messages
-from rest_framework import generics
+from rest_framework import generics, viewsets
+from rest_framework.views import APIView
 from django.http.response import HttpResponse
+from rest_framework.response import Response
 from django.views.generic import ListView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect, get_object_or_404
 
 logger = logging.getLogger(__name__)
 
+# class RemindersAPIView(APIView):
+#     def get(self, request):
+#         reminders = models.Reminder.objects.all()
+#         serializer = serializers.ReminderSerializer(reminders, many=True)
+#         return Response(serializer.data)
 
-class MoneyInAPIView(generics.ListCreateAPIView):
-    """
-    API MoneyIn
-    """
-    queryset = models.MoneyIn.objects.all()
-    serializer_class = serializers.MoneyInSerializer
+#     def post(self, request):
+#         content = request.POST["content"]
+#         Reminders.objects.create(content=content, author=request.user)
 
-
-class MoneyInSingleAPIView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    API MoneyIn Single
-    """
-    queryset = models.MoneyIn.objects.all()
-    serializer_class = serializers.MoneyInSerializer
+#     def delete(self, request):
+#         Reminders.objects.all().delete()
 
 
-class MoneyOutAPIView(generics.ListCreateAPIView):
-    """
-    API MoneyOut
-    """
-    queryset = models.MoneyOut.objects.all()
-    serializer_class = serializers.MoneyOutSerializer
-
-
-class MoneyOutSingleAPIView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    API MoneyOut Single
-    """
-    queryset = models.MoneyOut.objects.all()
-    serializer_class = serializers.MoneyOutSerializer
-
-
-class FutureAPIView(generics.ListCreateAPIView):
-    """
-    API Future
-    """
-    queryset = models.Future.objects.all()
-    serializer_class = serializers.FutureSerializer
-
-
-class FutureSingleAPIView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    API Future Single
-    """
-    queryset = models.Future.objects.all()
-    serializer_class = serializers.FutureSerializer
+class RemindersViewSet(viewsets.ModelViewSet):
+    queryset = models.Reminders.objects.all()
+    serializer_class = serializers.RemindersSerializer
 
 
 class Index(LoginRequiredMixin, TemplateView):
@@ -70,15 +41,23 @@ class Index(LoginRequiredMixin, TemplateView):
     def setup(self, *args, **kwargs):
         super().setup(*args, **kwargs)
 
-        total_in = models.MoneyIn.objects.all().aggregate(Sum('value'))[
+        initial_date = self.request.GET.get('initial_date')
+        final_date = self.request.GET.get('final_date')
+
+        if not initial_date:
+            initial_date = datetime.date.today()-datetime.timedelta(days=365)
+        if not final_date:
+            final_date = datetime.date.today()
+
+        total_in = models.MoneyIn.objects.filter(date__range=[initial_date, final_date]).aggregate(Sum('value'))[
             'value__sum']
-        total_out = models.MoneyOut.objects.all().aggregate(Sum('value'))[
+        total_out = models.MoneyOut.objects.filter(date__range=[initial_date, final_date]).aggregate(Sum('value'))[
             'value__sum']
 
         total_in_future = models.Future.objects.filter(
-            category='entrada').aggregate(total=Sum('value')).get('total')
+            category='entrada', release_date__range=[initial_date, final_date]).aggregate(total=Sum('value')).get('total')
         total_out_future = models.Future.objects.filter(
-            category='saida').aggregate(total=Sum('value')).get('total')
+            category='saida', receiving_date__range=[initial_date, final_date]).aggregate(total=Sum('value')).get('total')
 
         if total_in == None and total_out == None:
             total_in = 0
@@ -96,28 +75,39 @@ class Index(LoginRequiredMixin, TemplateView):
         elif total_out_future == None:
             total_out_future = 0
 
+        current_in = models.MoneyIn.objects.all().aggregate(Sum('value'))[
+            'value__sum']
+        current_out = models.MoneyOut.objects.all().aggregate(Sum('value'))[
+            'value__sum']
+
+        current_balance = current_in - current_out
+
         total_expenses = [
             {'category': 'total_health', 'amount': float(models.MoneyOut.objects.filter(
-                category='saude').aggregate(total=Sum('value')).get('total') or 0.0)},
+                category='saude', date__range=[initial_date, final_date]).aggregate(total=Sum('value')).get('total') or 0.0)},
             {'category': 'total_food', 'amount': float(models.MoneyOut.objects.filter(
-                category='alimentacao').aggregate(total=Sum('value')).get('total') or 0.0)},
+                category='alimentacao', date__range=[initial_date, final_date]).aggregate(total=Sum('value')).get('total') or 0.0)},
             {'category': 'total_lazer', 'amount': float(models.MoneyOut.objects.filter(
-                category='lazer').aggregate(total=Sum('value')).get('total') or 0.0)},
+                category='lazer', date__range=[initial_date, final_date]).aggregate(total=Sum('value')).get('total') or 0.0)},
             {'category': 'total_entertainment', 'amount': float(models.MoneyOut.objects.filter(
-                category='entretenimento').aggregate(total=Sum('value')).get('total') or 0.0)},
+                category='entretenimento', date__range=[initial_date, final_date]).aggregate(total=Sum('value')).get('total') or 0.0)},
             {'category': 'total_energywater', 'amount': float(models.MoneyOut.objects.filter(
-                category='energiasaneamento').aggregate(total=Sum('value')).get('total') or 0.0)},
+                category='energiasaneamento', date__range=[initial_date, final_date]).aggregate(total=Sum('value')).get('total') or 0.0)},
             {'category': 'total_taxes', 'amount': float(models.MoneyOut.objects.filter(
-                category='impostos').aggregate(total=Sum('value')).get('total') or 0.0)},
+                category='impostos', date__range=[initial_date, final_date]).aggregate(total=Sum('value')).get('total') or 0.0)},
             {'category': 'total_fuel', 'amount': float(models.MoneyOut.objects.filter(
-                category='combustivel').aggregate(total=Sum('value')).get('total') or 0.0)},
+                category='combustivel', date__range=[initial_date, final_date]).aggregate(total=Sum('value')).get('total') or 0.0)},
             {'category': 'total_other', 'amount': float(models.MoneyOut.objects.filter(
-                category='outros').aggregate(total=Sum('value')).get('total') or 0.0)}
+                category='outros', date__range=[initial_date, final_date]).aggregate(total=Sum('value')).get('total') or 0.0)}
         ]
 
         context = {
             'total_in': total_in,
             'total_out': total_out,
+            'current_balance': current_balance,
+
+            'initial_date': initial_date,
+            'final_date': final_date,
 
             'total_in_future': total_in_future,
             'total_out_future': total_out_future,
@@ -126,10 +116,11 @@ class Index(LoginRequiredMixin, TemplateView):
 
             'total_expenses': total_expenses,
 
-            'reminders_form': forms.RemindersModelForm,
+            'reminders_form': forms.RemindersModelForm(self.request.POST or None),
             'all_reminders': models.Reminders.objects.all(),
         }
 
+        self.reminders_form = context['reminders_form']
         self.render = render(
             self.request, self.template_name, context)
 
@@ -137,7 +128,16 @@ class Index(LoginRequiredMixin, TemplateView):
         return self.render
 
     def post(self, *args, **kwargs):
-        pass
+        if not self.reminders_form.is_valid:
+            return self.render
+
+        new_reminder = models.Reminders(
+            author=self.request.user,
+            content=self.reminders_form.cleaned_data.get('content'),
+        )
+        new_reminder.save()
+
+        return redirect('index')
 
 
 class MoneyIn(LoginRequiredMixin, TemplateView):
@@ -161,7 +161,6 @@ class MoneyIn(LoginRequiredMixin, TemplateView):
 
     def post(self, *args, **kwargs):
         if not self.money_in_form.is_valid():
-            print("chegou aqui")
             return self.render
 
         new_money_in = models.MoneyIn(
@@ -268,7 +267,6 @@ class MoneyOut(LoginRequiredMixin, TemplateView):
             payment_method=self.money_out_form.cleaned_data.get(
                 'payment_method'),
             observation=self.money_out_form.cleaned_data.get('observation'),
-            # registered_by=self.request.user
         )
         new_money_out.save()
 
@@ -435,39 +433,6 @@ class FutureDelete(LoginRequiredMixin, TemplateView):
         logger.warning(
             'Um lançamento financeiro foi deletado do banco de dados')
         return redirect('future')
-
-
-class Reminders(LoginRequiredMixin, TemplateView):
-    template_name = 'index.html'
-
-    def setup(self, *args, **kwargs):
-        super().setup(*args, **kwargs)
-
-        context = {
-            'reminders_form': forms.RemindersModelForm(
-                data=self.request.POST or None
-            ),
-            'all_reminders': models.Reminders.objects.all(),
-        }
-
-        self.reminders_form = context['reminders_form']
-
-        self.render = render(self.request, self.template_name, context)
-
-    def get(self, *args, **kwargs):
-        return self.render
-
-    def post(self, *args, **kwargs):
-        if not self.reminders_form.is_valid():
-            return self.render
-
-        new_reminder = models.Reminders(
-            author=self.request.user,
-            content=self.reminders_form.cleaned_data.get('content'),
-        )
-        new_reminder.save()
-
-        return redirect('index')
 
 
 class RemindersDelete(LoginRequiredMixin, TemplateView):
