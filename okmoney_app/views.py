@@ -70,6 +70,14 @@ class Index(LoginRequiredMixin, TemplateView):
         current_out = models.MoneyOut.objects.all().aggregate(Sum('value'))[
             'value__sum']
 
+        if current_in == None and current_out == None:
+            current_in = 0
+            current_out = 0
+        elif current_in == None:
+            current_in = 0
+        elif current_out == None:
+            current_out = 0
+
         current_balance = current_in - current_out
 
         total_expenses = [
