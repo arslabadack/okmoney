@@ -38,12 +38,6 @@ class Index(LoginRequiredMixin, TemplateView):
         except:
             return redirect('login')
 
-        try:
-            token, created = Token.objects.get_or_create(
-                user=self.request.user)
-        except:
-            return redirect('login')
-
         if not initial_date:
             initial_date = datetime.date.today()-datetime.timedelta(days=365)
         if not final_date:
