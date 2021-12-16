@@ -31,8 +31,12 @@ class Index(LoginRequiredMixin, TemplateView):
 
         initial_date = self.request.GET.get('initial_date')
         final_date = self.request.GET.get('final_date')
+        
+        try:
+            token, created = Token.objects.get_or_create(user=self.request.user)
+        except:
+            return redirect('login')
 
-        token, created = Token.objects.get_or_create(user=self.request.user)
 
         if not initial_date:
             initial_date = datetime.date.today()-datetime.timedelta(days=365)
