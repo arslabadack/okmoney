@@ -45,9 +45,9 @@ class Index(LoginRequiredMixin, TemplateView):
             'value__sum']
 
         total_in_future = models.Future.objects.filter(
-            category='entrada', release_date__range=[initial_date, final_date]).aggregate(total=Sum('value')).get('total')
+            category='entrada').aggregate(total=Sum('value')).get('total')
         total_out_future = models.Future.objects.filter(
-            category='saida', receiving_date__range=[initial_date, final_date]).aggregate(total=Sum('value')).get('total')
+            category='saida').aggregate(total=Sum('value')).get('total')
 
         if total_in == None and total_out == None:
             total_in = 0

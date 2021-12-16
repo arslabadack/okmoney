@@ -162,7 +162,7 @@
                                             {% endif %}
                                         </div>
                                         <div class="px-4">
-                                            <input type="text" class="tdl-new form-control" placeholder="Write new item and hit 'Enter'...">
+                                            <input type="text" class="tdl-new form-control" placeholder="Escreva seu lembrete e pressione'Enter'...">
                                         </div>
                                     </div>
                                 </div>
@@ -256,7 +256,7 @@
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify({
-                                'content': s,
+                                'content': v,
                             })
                         }))
                         const data = await response.json();
